@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import "./globals.css";
+import { EuclidSquare } from "./font";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -11,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html>
+    <html className={`${EuclidSquare.variable}`}>
       <body>{children}</body>
     </html>
   );
