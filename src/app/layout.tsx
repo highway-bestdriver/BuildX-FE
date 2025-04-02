@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import "./globals.css";
+import { EuclidSquare, EuclidTriangle } from "./font";
+import { Header } from "../common/Header";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -11,8 +14,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html>
-      <body>{children}</body>
+    <html className={`${EuclidSquare.variable} ${EuclidTriangle.variable}`}>
+      <body>
+        <div className="flex flex-col items-center">
+          <Header />
+          <div className="w-full flex flex-col items-center pt-20 mx-auto">
+            {children}
+          </div>
+        </div>
+      </body>
     </html>
   );
 }

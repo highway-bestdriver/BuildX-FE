@@ -1,15 +1,99 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #eaebf0;
 }
 
-@theme inline {
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif, EuclidSquare, EuclidTriangle,
+    GeistMono;
+}
+
+button {
+  background-color: transparent;
+}
+
+input:focus {
+  outline: none;
+}
+
+@theme {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-main_blue: #5156ff;
+  --color-main_orange: #e78f46;
+  --color-main_black: #363637;
+  --color-main_gray: #eaebf0;
+  --color-dark_blue: #08012f;
+
+  --font-EuclidSquare: var(--font-EuclidSquare);
+  --font-EuclidTriangle: var(--font-EuclidTriangle);
+  --font-geist-mono: var(--font-geist-mono);
+  --font-GeistMono: var(--font-GeistMono);
+}
+
+@layer components {
+  .body_16_L {
+    font-family: var(--font-EuclidSquare);
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 140%;
+  }
+  .body_16_R {
+    font-family: var(--font-EuclidSquare);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 140%;
+  }
+  .body_16_M {
+    font-family: var(--font-EuclidSquare);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 140%;
+  }
+  .body_16_SB {
+    font-family: var(--font-EuclidSquare);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 140%;
+  }
+  .body_16_B {
+    font-family: var(--font-EuclidSquare);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 140%;
+  }
+
+  .headline_48_SB {
+    font-family: var(--font-EuclidTriangle);
+    font-size: 3rem;
+    font-weight: 600;
+    line-height: 130%;
+  }
+  .headline_36_SB {
+    font-family: var(--font-EuclidTriangle);
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 130%;
+  }
+  .headline_24_SB {
+    font-family: var(--font-EuclidTriangle);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 130%;
+  }
+
+  .caption_24_SB {
+    font-family: var(--font-geist-mono);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 130%;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,10 +101,4 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
