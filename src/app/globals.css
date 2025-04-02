@@ -4,6 +4,25 @@
   --background: #eaebf0;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif, EuclidSquare, EuclidTriangle,
+    GeistMono;
+}
+
+button {
+  background-color: transparent;
+}
+
+input:focus {
+  outline: none;
+}
+
 @theme {
   --color-background: var(--background);
   --color-main_blue: #5156ff;
@@ -82,11 +101,4 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif, EuclidSquare, EuclidTriangle,
-    GeistMono;
 }
