@@ -3,9 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
-
-import Logo from "@assets/images/logo.png";
+import { Logo } from "@assets/icons";
 
 const MENU_ITEMS = [
   { href: "/tutorial", label: "TUTORIAL" },
@@ -34,9 +32,11 @@ export const Header = () => {
   // };
 
   return (
-    <div className="flex flex-row w-full justify-between items-center">
-      <Image src={Logo} alt="Logo" width={150} />
+    <div className="absolute flex flex-row w-[90%] justify-between items-center mt-6 rounded-[20px] shadow-[0px_2px_0px_1px_#000] px-10 pb-1">
+      <Logo width={200} />
       <nav className="flex flex-row w-full justify-between items-center">
+        <div></div>
+        <div></div>
         {MENU_ITEMS.map((item) => (
           <Link
             key={item.href}
@@ -47,23 +47,11 @@ export const Header = () => {
             {item.label}
           </Link>
         ))}
-        {isLogin ? (
-          <button
-            className="body_16_M text-dark_blue"
-            //onClick={handleLogout}
-          >
-            LOGOUT
-          </button>
-        ) : (
-          <Link
-            href="/login"
-            className="body_16_M text-dark_blue"
-            onClick={() => setIsOpen(false)}
-          >
-            LOGIN
-          </Link>
-        )}
+        <div></div>
       </nav>
+      <div className="body_16_M text-white bg-main_blue rounded-[15px] px-6 py-2 cursor-pointer">
+        Login
+      </div>
     </div>
   );
 };
