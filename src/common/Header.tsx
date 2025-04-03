@@ -41,7 +41,7 @@ export const Header = () => {
           <Link
             key={item.href}
             href={item.href}
-            className="body_16_M text-dark_blue"
+            className="square_16_M text-dark_blue"
             onClick={() => setIsOpen(false)}
           >
             {item.label}
@@ -49,9 +49,12 @@ export const Header = () => {
         ))}
         <div></div>
       </nav>
-      <div className="body_16_M text-white bg-main_blue rounded-[15px] px-6 py-2 cursor-pointer">
+      <Link
+        href="/login"
+        className="square_16_M text-white bg-main_blue rounded-[15px] px-6 py-2 cursor-pointer"
+      >
         Login
-      </div>
+      </Link>
     </div>
   );
 };
