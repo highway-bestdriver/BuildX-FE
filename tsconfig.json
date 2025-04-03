@@ -18,10 +18,16 @@
         "name": "next"
       }
     ],
+    "typeRoots": ["./node_modules/@types", "./types"],
+    "baseUrl": ".",
     "paths": {
-      "@assets/*": ["./src/assets/*"],
-      "@app/*": ["./src/app/*"],
-      "@hooks/*": ["./src/hooks"]
+      "@api/*": ["src/api/*"],
+      "@app/*": ["src/app/*"],
+      "@assets/*": ["src/assets/*"],
+      "@common/*": ["src/common/*"],
+      "@constants/*": ["src/constants/*"],
+      "@hooks/*": ["src/app/search/_hooks/*"],
+      "@store/*": ["src/store/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

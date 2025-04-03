@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { EuclidSquare, EuclidTriangle } from "./font";
+import { EuclidSquare, EuclidTriangle, GeistMono, suit, suite } from "./font";
 import { Header } from "../common/Header";
 
 export const metadata: Metadata = {
@@ -14,11 +14,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html className={`${EuclidSquare.variable} ${EuclidTriangle.variable}`}>
+    <html
+      className={`${EuclidSquare.variable} ${EuclidTriangle.variable} ${GeistMono.variable} ${suit.variable} ${suite.variable}`}
+    >
       <body>
         <div className="flex flex-col items-center">
           <Header />
-          <div className="w-full flex flex-col items-center pt-20 mx-auto">
+          <div className="flex flex-col w-full px-10 lg:max-w-[1280px] items-center pt-20 mx-auto">
             {children}
           </div>
         </div>

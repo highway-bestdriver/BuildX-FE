@@ -12,7 +12,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif, EuclidSquare, EuclidTriangle,
-    GeistMono;
+    GeistMono, suite, suit;
 }
 
 button {
@@ -30,69 +30,126 @@ input:focus {
   --color-main_black: #363637;
   --color-main_gray: #eaebf0;
   --color-dark_blue: #08012f;
+  --color-grey_200: #e5e8eb;
+  --color-grey_400: #b0b8c1;
+  --color-grey: #6b7684;
 
   --font-EuclidSquare: var(--font-EuclidSquare);
   --font-EuclidTriangle: var(--font-EuclidTriangle);
-  --font-geist-mono: var(--font-geist-mono);
   --font-GeistMono: var(--font-GeistMono);
 }
 
 @layer components {
-  .body_16_L {
+  .square_16_L {
     font-family: var(--font-EuclidSquare);
     font-size: 1rem;
     font-weight: 300;
     line-height: 140%;
   }
-  .body_16_R {
+  .square_16_R {
     font-family: var(--font-EuclidSquare);
     font-size: 1rem;
     font-weight: 400;
     line-height: 140%;
   }
-  .body_16_M {
+  .square_16_M {
     font-family: var(--font-EuclidSquare);
     font-size: 1rem;
     font-weight: 500;
     line-height: 140%;
   }
-  .body_16_SB {
+  .square_16_SB {
     font-family: var(--font-EuclidSquare);
     font-size: 1rem;
     font-weight: 600;
     line-height: 140%;
   }
-  .body_16_B {
+  .square_16_B {
     font-family: var(--font-EuclidSquare);
     font-size: 1rem;
     font-weight: 700;
     line-height: 140%;
   }
 
-  .headline_48_SB {
+  .triangle_48_SB {
     font-family: var(--font-EuclidTriangle);
     font-size: 3rem;
     font-weight: 600;
     line-height: 130%;
   }
-  .headline_36_SB {
+  .triangle_36_SB {
     font-family: var(--font-EuclidTriangle);
     font-size: 2rem;
     font-weight: 600;
     line-height: 130%;
   }
-  .headline_24_SB {
+  .triangle_24_SB {
     font-family: var(--font-EuclidTriangle);
     font-size: 1.5rem;
     font-weight: 600;
     line-height: 130%;
   }
 
-  .caption_24_SB {
-    font-family: var(--font-geist-mono);
-    font-size: 1.5rem;
+  .geist_16_L {
+    font-family: var(--font-GeistMono);
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 140%;
+  }
+  .geist_16_R {
+    font-family: var(--font-GeistMono);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 140%;
+  }
+  .geist_16_M {
+    font-family: var(--font-GeistMono);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 140%;
+  }
+  .geist_16_SB {
+    font-family: var(--font-GeistMono);
+    font-size: 1rem;
     font-weight: 600;
-    line-height: 130%;
+    line-height: 140%;
+  }
+  .geist_16_B {
+    font-family: var(--font-GeistMono);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 140%;
+  }
+
+  .suit_16_L {
+    font-family: var(--font-suit);
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 140%;
+  }
+  .suit_16_R {
+    font-family: var(--font-suit);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 140%;
+  }
+  .suit_16_M {
+    font-family: var(--font-suit);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 140%;
+  }
+  .suit_16_SB {
+    font-family: var(--font-suit);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 140%;
+  }
+  .suit_16_B {
+    font-family: var(--font-suit);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 140%;
   }
 }
 
