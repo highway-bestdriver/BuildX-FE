@@ -10,7 +10,7 @@ const ProjectsPage = () => {
       <article className="flex-1 flex-col items-center">
         <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 gap-x-3 gap-y-6">
           <Link
-            href="/create/1"
+            href="/new/step/1"
             className="flex items-center justify-center border-2 border-dashed border-gray-400 rounded-lg h-48 cursor-pointer hover:bg-gray-100"
           >
             <span className="square_16_SB text-xl text-gray-600">

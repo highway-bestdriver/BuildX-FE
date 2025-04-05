@@ -6,3 +6,8 @@ export { default as IntroDescription } from "./IntroDescription";
 export { default as IntroImg } from "./IntroImg";
 export { default as IntroText } from "./IntroText";
 export { default as Logo } from "./Logo";
+export { default as Progressbar1 } from "./Progressbar1";
+export { default as Progressbar2 } from "./Progressbar2";
+export { default as Progressbar3 } from "./Progressbar3";
+export { default as Progressbar4 } from "./Progressbar4";
+export { default as Progressbar5 } from "./Progressbar5";
