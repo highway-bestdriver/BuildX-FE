@@ -1,8 +1,17 @@
+import Canvas from "./_components/Canvas";
+import SideTab from "./_components/SideTab";
+
 const Step3 = () => {
   return (
-    <>
-      <div>Step3</div>
-    </>
+    <div className="flex w-full min-h-[42rem] mt-6">
+      <div className="w-[260px] h-full">
+        <SideTab />
+      </div>
+
+      <div className="flex-1 bg-white p-4">
+        <Canvas />
+      </div>
+    </div>
   );
 };
 

@@ -1,0 +1,18 @@
+export const blockData = [
+  { label: "Conv2D", color: "bg-yellow-400" },
+  { label: "Pooling", color: "bg-green-400" },
+  { label: "Dense", color: "bg-pink-500" },
+  { label: "BatchNorm", color: "bg-lime-400" },
+  { label: "Dropout", color: "bg-fuchsia-400" },
+  { label: "Flatten", color: "bg-red-400" },
+  { label: "upsampling", color: "bg-indigo-200" },
+  { label: "concatenate", color: "bg-emerald-300" },
+  { label: "relu", color: "bg-orange-300" },
+  { label: "leaky relu", color: "bg-orange-300" },
+  { label: "softmax", color: "bg-orange-400" },
+  { label: "sigmoid", color: "bg-orange-400" },
+  { label: "tanh", color: "bg-orange-400" },
+  { label: "linear", color: "bg-orange-400" },
+  { label: "Add", color: "bg-yellow-300" },
+  { label: "DepthwiseConv2D", color: "bg-yellow-300" },
+];

@@ -33,7 +33,7 @@ const LoginPage = () => {
           Continue with Google
         </span>
       </div>
-      <Link href="/signup" className="suit_16_M text-grey underline pt-10">
+      <Link href="/signup" className="suit_16_M text-gray-500 underline pt-10">
         아직 계정이 없나요? 회원가입하러 가기
       </Link>
     </div>

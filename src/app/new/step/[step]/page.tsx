@@ -62,13 +62,13 @@ const StepPage = () => {
       {renderStep()}
 
       {/* 단계이동 버튼 */}
-      <span className="w-full flex flex-row justify-between">
+      <span className="w-full flex flex-row justify-between my-12">
         {step != "1" ? (
           <Button text="< 이전으로&nbsp;" isWhite={true} />
         ) : (
           <div></div>
         )}
-        <Button text="&nbsp;다음으로 >" />
+        {step != "5" ? <Button text="&nbsp;다음으로 >" /> : <div></div>}
       </span>
     </>
   );

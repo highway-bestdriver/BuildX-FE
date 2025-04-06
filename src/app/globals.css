@@ -30,9 +30,7 @@ input:focus {
   --color-main_black: #363637;
   --color-main_gray: #eaebf0;
   --color-dark_blue: #08012f;
-  --color-grey_200: #e5e8eb;
-  --color-grey_400: #b0b8c1;
-  --color-grey: #6b7684;
+  --color-lightblue: #e9f0fd;
 
   --font-EuclidSquare: var(--font-EuclidSquare);
   --font-EuclidTriangle: var(--font-EuclidTriangle);
