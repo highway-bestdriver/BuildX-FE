@@ -1,5 +1,5 @@
+import SideTab from "./_components/(sidetab)/SideTab";
 import Canvas from "./_components/Canvas";
-import SideTab from "./_components/SideTab";
 
 const Step3 = () => {
   return (

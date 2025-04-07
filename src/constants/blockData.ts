@@ -16,3 +16,49 @@ export const blockData = [
   { label: "Add", color: "bg-yellow-300" },
   { label: "DepthwiseConv2D", color: "bg-yellow-300" },
 ];
+
+export type HyperParameter = {
+  name: string;
+  placeholder: string;
+};
+
+export const hyperParameterMap: Record<string, HyperParameter[]> = {
+  Conv2D: [
+    { name: "filters", placeholder: "ex. 32, 64, 128" },
+    { name: "kernel_size", placeholder: "ex. [3,3]" },
+    { name: "strides", placeholder: "ex. [1,1]" },
+    { name: "padding", placeholder: "valid | same" },
+    { name: "activation", placeholder: "relu | sigmoid | tanh | linear" },
+    { name: "dilation_rate", placeholder: "ex. [1,1]" },
+    { name: "use_bias", placeholder: "true | false" },
+  ],
+  Pooling: [
+    { name: "pooling_type", placeholder: "max | avg" },
+    { name: "pooling_size", placeholder: "ex. [2,2]" },
+    { name: "strides", placeholder: "ex. [2,2]" },
+    { name: "padding", placeholder: "valid | same" },
+  ],
+  Dense: [
+    { name: "units", placeholder: "ex. 128, 256" },
+    { name: "activation", placeholder: "relu | sigmoid | tanh | linear" },
+    { name: "use_bias", placeholder: "true | false" },
+  ],
+  BatchNorm: [
+    { name: "axis", placeholder: "-1 | 1 | 2" },
+    { name: "momentum", placeholder: "ex. 0.99" },
+    { name: "epsilon", placeholder: "ex. 0.001" },
+  ],
+  Dropout: [
+    { name: "rate", placeholder: "ex. 0.2, 0.5" },
+    { name: "seed", placeholder: "숫자 입력" },
+  ],
+  upsampling: [{ name: "size", placeholder: "ex. [2,2]" }],
+  concatenate: [{ name: "axis", placeholder: "ex. -1" }],
+  Add: [{ name: "connection", placeholder: "ex. residual" }],
+  DepthwiseConv2D: [
+    { name: "kernel_size", placeholder: "ex. [3,3]" },
+    { name: "depth_multiplier", placeholder: "ex. 1" },
+    { name: "activation", placeholder: "relu | sigmoid | tanh | linear" },
+    { name: "padding", placeholder: "valid | same" },
+  ],
+};
