@@ -1,3 +1,6 @@
+export const BLOCK_WIDTH = 180;
+export const BLOCK_HEIGHT = 30.4;
+
 export const blockData = [
   { label: "Conv2D", color: "bg-yellow-400" },
   { label: "Pooling", color: "bg-green-400" },

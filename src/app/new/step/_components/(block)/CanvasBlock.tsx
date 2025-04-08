@@ -3,6 +3,7 @@
 import { useDrag, useDrop } from "react-dnd";
 import { useRef } from "react";
 import SettingModal from "./SettingModal";
+import { BLOCK_HEIGHT, BLOCK_WIDTH } from "@constants/blockData";
 
 interface BlockProps {
   id: string;
@@ -33,11 +34,7 @@ const CanvasBlock = ({
 }: BlockProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
 
-  // const [, drag] = useDrag(() => ({
-  //   type: "CANVAS_BLOCK",
-  //   item: { id, x, y },
-  // }));
-  const [, drag, preview] = useDrag(() => ({
+  const [, drag] = useDrag(() => ({
     type: "CANVAS_BLOCK",
     item: { id },
     end: (item, monitor) => {
@@ -46,10 +43,8 @@ const CanvasBlock = ({
       if (!clientOffset || !canvas) return;
 
       const canvasRect = canvas.getBoundingClientRect();
-      const blockWidth = 180;
-      const blockHeight = 30.4;
-      const newX = clientOffset.x - canvasRect.left - blockWidth / 2;
-      const newY = clientOffset.y - canvasRect.top - blockHeight / 2;
+      const newX = clientOffset.x - canvasRect.left - BLOCK_WIDTH / 2;
+      const newY = clientOffset.y - canvasRect.top - BLOCK_HEIGHT / 2;
 
       onMove(item.id, newX, newY);
     },
@@ -63,10 +58,8 @@ const CanvasBlock = ({
       if (!clientOffset || !canvas) return;
 
       const canvasRect = canvas.getBoundingClientRect();
-      const blockWidth = 180;
-      const blockHeight = 30.4;
-      const newX = clientOffset.x - canvasRect.left - blockWidth / 2;
-      const newY = clientOffset.y - canvasRect.top - blockHeight / 2;
+      const newX = clientOffset.x - canvasRect.left - BLOCK_WIDTH / 2;
+      const newY = clientOffset.y - canvasRect.top - BLOCK_HEIGHT / 2;
 
       onMove(item.id, newX, newY);
     },
@@ -90,7 +83,11 @@ const CanvasBlock = ({
       </button>
 
       {isModalOpen && (
-        <SettingModal label={label} onClose={() => onCloseModal(id)} />
+        <SettingModal
+          label={label}
+          blockUUID={id}
+          onClose={() => onCloseModal(id)}
+        />
       )}
     </div>
   );

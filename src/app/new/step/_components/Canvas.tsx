@@ -3,7 +3,7 @@
 import { useDrop } from "react-dnd";
 import { useRef, useState } from "react";
 import CanvasBlock from "./(block)/CanvasBlock";
-import SettingModal from "./(block)/SettingModal";
+import { BLOCK_HEIGHT, BLOCK_WIDTH } from "@constants/blockData";
 
 interface BlockItem {
   id: string;
@@ -26,12 +26,8 @@ const Canvas = () => {
       if (!clientOffset || !canvas) return;
 
       const canvasRect = canvas.getBoundingClientRect();
-
-      const blockWidth = 180;
-      const blockHeight = 30.4;
-
-      const x = clientOffset.x - canvasRect.left - blockWidth / 2;
-      const y = clientOffset.y - canvasRect.top - blockHeight / 2;
+      const x = clientOffset.x - canvasRect.left - BLOCK_WIDTH / 2;
+      const y = clientOffset.y - canvasRect.top - BLOCK_HEIGHT / 2;
 
       setBlocks((prev) => [
         ...prev,
@@ -58,6 +54,7 @@ const Canvas = () => {
         block.id === id ? { ...block, isModalOpen: true } : block
       )
     );
+    console.log(id);
   };
 
   const handleCloseModal = (id: string) => {
