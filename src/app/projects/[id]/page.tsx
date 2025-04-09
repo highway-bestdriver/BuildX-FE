@@ -1,15 +1,17 @@
-import { notFound } from "next/navigation";
+"use client";
+
 import Link from "next/link";
+import { useParams } from "next/navigation";
+import { notFound } from "next/navigation";
+
+import Button from "@common/Button";
 import { projectDetailData } from "../mock";
 import { IcCalendar, IcLines, IcStar } from "@assets/icons";
-import Button from "@common/Button";
 
-interface Props {
-  params: {
-    id: string;
-  };
-}
-const ProjectsDetail = ({ params }: Props) => {
+const ProjectsDetail = () => {
+  const params = useParams();
+  const id = params.id as string;
+
   const project = projectDetailData.find(
     (item) => item.id.toString() === params.id
   );

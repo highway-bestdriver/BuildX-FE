@@ -1,9 +1,8 @@
-// components/Step2.tsx
 "use client";
 
-import { preprocessingData } from "@constants/preprocessingData";
 import { useState } from "react";
 import SettingInput from "./_components/(block)/SettingInput";
+import { preprocessingData } from "@constants/preprocessingData";
 
 const Step2 = () => {
   const [selected, setSelected] = useState<string[]>([]);
@@ -31,21 +30,21 @@ const Step2 = () => {
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4 py-6">
-      <h2 className="text-2xl font-semibold mb-6">🧹 전처리 설정</h2>
+      <h2 className="text-2xl suit_16_SB mb-6">ㅣ 전처리 설정</h2>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {Object.keys(preprocessingData).map((method) => (
           <div
             key={method}
             onClick={() => toggleSelection(method)}
-            className={`border rounded-xl p-4 cursor-pointer transition hover:shadow-md ${
+            className={`border rounded-xl px-6 py-4 cursor-pointer transition hover:shadow-md ${
               selected.includes(method)
-                ? "bg-main_blue text-white border-main_blue"
-                : "bg-white"
+                ? "bg-main_blue text-white border-main_blue square_16_SB"
+                : "bg-white square_16_SB"
             }`}
           >
-            <h3 className="text-lg font-bold mb-1">{method}</h3>
-            <p className="text-sm text-gray-500">
+            <h3 className="text-lg square_16_SB mb-1">{method}</h3>
+            <p className="text-sm suit_16_M text-gray-400">
               {preprocessingData[method][0]?.placeholder ||
                 "설정을 입력하려면 클릭"}
             </p>
@@ -54,11 +53,11 @@ const Step2 = () => {
       </div>
 
       {selected.length > 0 && (
-        <div className="mt-8 space-y-6">
+        <div className="mt-8 space-y-4">
           {selected.map((method) => (
-            <div key={method} className="bg-white border rounded-xl p-4">
-              <h4 className="text-lg font-semibold mb-3">{method} 설정</h4>
-              <div className="flex flex-col gap-3">
+            <div key={method} className="bg-white border rounded-xl px-6 py-4">
+              <h4 className="text-lg suit_16_B mb-3">{method} 설정</h4>
+              <div className="flex flex-col gap-2">
                 {preprocessingData[method].map(({ name, placeholder }) => (
                   <SettingInput
                     key={name}
