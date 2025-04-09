@@ -32,7 +32,7 @@ export const Header = () => {
   // };
 
   return (
-    <div className="fixed mx-auto z-50 flex flex-row w-[95%] 2xl:max-w-[1536px] justify-between items-center rounded-[20px] shadow-[0px_2px_0px_1px_#000] mt-3 px-10 pb-2 bg-background">
+    <div className="fixed mx-auto z-50 flex flex-row w-[95%] 2xl:max-w-[1536px] justify-between items-center rounded-[20px] shadow-[0px_2px_0px_1px_#000] pt-3 px-10 pb-2 bg-background">
       <Logo width={120} />
       <nav className="flex flex-row w-full justify-between items-center">
         <div></div>

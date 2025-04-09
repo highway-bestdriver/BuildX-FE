@@ -8,7 +8,7 @@ const SignupPage = () => {
       <div className="triangle_48_SB py-20">Sign Up</div>
 
       {/* 인풋 필드 */}
-      <section className="w-full md:max-w-[34rem] flex flex-col gap-6">
+      <article className="w-full md:max-w-[34rem] flex flex-col gap-6">
         <InputField
           label="Name"
           name="name"
@@ -34,7 +34,7 @@ const SignupPage = () => {
           name="email"
           placeholder="이메일을 입력해 주세요."
         />
-      </section>
+      </article>
 
       <div className="h-30" />
       <Link href="/">

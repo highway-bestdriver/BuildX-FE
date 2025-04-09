@@ -9,7 +9,7 @@ const LoginPage = () => {
       <div className="triangle_48_SB pt-20 pb-30">Login</div>
 
       {/* ID & PW */}
-      <section className="w-full md:max-w-[34rem] flex flex-col gap-6">
+      <article className="w-full md:max-w-[34rem] flex flex-col gap-6">
         <InputField
           label="ID"
           name="username"
@@ -22,7 +22,7 @@ const LoginPage = () => {
           placeholder="비밀번호를 입력해 주세요."
           isLogin={true}
         />
-      </section>
+      </article>
 
       <div className="h-30" />
       <Button text="로그인하기" />
@@ -33,7 +33,7 @@ const LoginPage = () => {
           Continue with Google
         </span>
       </div>
-      <Link href="/signup" className="suit_16_M text-grey underline pt-10">
+      <Link href="/signup" className="suit_16_M text-gray-500 underline pt-10">
         아직 계정이 없나요? 회원가입하러 가기
       </Link>
     </div>
