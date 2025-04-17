@@ -60,7 +60,10 @@ const Step4 = () => {
             />
           </span>
           <div className="flex justify-center mt-6">
-            <span className="px-4 py-2 text-lg suit_16_SB bg-gray-400 text-white rounded-lg hover:bg-gray-500 cursor-pointer">
+            <span
+              onClick={handleComplete}
+              className="px-4 py-2 text-lg suit_16_SB bg-gray-400 text-white rounded-lg hover:bg-gray-500 cursor-pointer"
+            >
               Complete
             </span>
           </div>
@@ -70,9 +73,9 @@ const Step4 = () => {
       <div className="mt-12" />
       <div
         onClick={handleTrain}
-        className="px-4 py-2 inline-block text-2xl suit_16_B bg-main_orange text-black hover:bg-orange-400 cursor-pointer border-[8px] rounded-[20px]"
+        className="px-6 py-2 inline-block text-2xl suit_16_B bg-main_orange text-black hover:bg-orange-400 cursor-pointer border-[8px] rounded-[20px]"
       >
-        훈련 시작
+        코드 생성
       </div>
     </div>
   );

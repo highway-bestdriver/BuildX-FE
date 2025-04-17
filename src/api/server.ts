@@ -2,12 +2,6 @@ import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
-interface ApiResponse<T = unknown> {
-  code: number;
-  message: string;
-  result: T;
-}
-
 type RequestData = Record<string, unknown>;
 type HttpMethod = "get" | "post" | "put" | "patch" | "delete";
 
@@ -39,7 +33,7 @@ function createApiRequest(client: AxiosInstance) {
 
     // 요청 후 401, 404 처리
     try {
-      const response = await client.request<ApiResponse<T>>(config);
+      const response = await client.request<T>(config);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

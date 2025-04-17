@@ -1,11 +1,11 @@
 import axios, { AxiosInstance } from "axios";
 import { token } from "./token";
 
-interface ApiResponse<T = unknown> {
-  code: number;
-  message: string;
-  result: T;
-}
+// interface ApiResponse<T = unknown> {
+//   code: number;
+//   message: string;
+//   result: T;
+// }
 
 type RequestData = Record<string, unknown>;
 type HttpMethod = "get" | "post" | "put" | "patch" | "delete";
@@ -59,9 +59,7 @@ privateClient.interceptors.response.use(
 // 클라이언트 헬퍼 함수
 const createApiRequest = (client: AxiosInstance) => {
   const request = <T>(method: HttpMethod, url: string, data?: RequestData) =>
-    client
-      .request<ApiResponse<T>>({ method, url, data })
-      .then((response) => response.data);
+    client.request<T>({ method, url, data }).then((response) => response.data);
 
   return {
     get: <T>(url: string) => request<T>("get", url),
