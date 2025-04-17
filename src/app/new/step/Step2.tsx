@@ -3,12 +3,14 @@
 import { useState } from "react";
 import SettingInput from "./_components/(block)/SettingInput";
 import { preprocessingData } from "@constants/preprocessingData";
+import { useModelStore } from "@store/useModelStore";
 
 const Step2 = () => {
   const [selected, setSelected] = useState<string[]>([]);
   const [inputs, setInputs] = useState<Record<string, Record<string, string>>>(
     {}
   );
+  const setPreprocessing = useModelStore((store) => store.setPreprocessing);
 
   const toggleSelection = (method: string) => {
     setSelected((prev) =>
@@ -26,6 +28,15 @@ const Step2 = () => {
         [key]: value,
       },
     }));
+  };
+
+  const handleComplete = () => {
+    const filtered: Record<string, Record<string, string>> = {};
+    selected.forEach((method) => {
+      filtered[method] = inputs[method] || {};
+    });
+    setPreprocessing(filtered);
+    console.log("전역 상태 저장 완료:", filtered);
   };
 
   return (
@@ -70,6 +81,15 @@ const Step2 = () => {
               </div>
             </div>
           ))}
+
+          <div className="flex justify-center mt-6">
+            <span
+              onClick={handleComplete}
+              className="px-4 py-2 text-lg suit_16_SB bg-main_orange text-white rounded-lg hover:bg-orange-400 cursor-pointer"
+            >
+              Complete
+            </span>
+          </div>
         </div>
       )}
     </div>

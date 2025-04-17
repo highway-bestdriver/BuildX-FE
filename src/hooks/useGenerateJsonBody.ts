@@ -1,4 +1,4 @@
-import { useBlockStore } from "@store/useBlockStore";
+import { useBlockStore } from "@store/useModelStore";
 
 export default function useGenerateJsonBody() {
   const { blockSettings } = useBlockStore.getState();

@@ -1,12 +1,18 @@
 import Image from "next/image";
 import { modelData } from "@constants/modelData";
 import { useState } from "react";
+import { useModelStore } from "@store/useModelStore";
 
 const ModelList = () => {
   const [selectedModel, setSelectedModel] = useState(0);
+  const setModelName = useModelStore((state) => state.setModelName);
+
   const handleSelectModel = (id: number) => {
     setSelectedModel(id);
+    const selected = modelData.find((model) => model.id === id);
+    if (selected) setModelName(selected.name);
   };
+
   return (
     <>
       {/* 안내 문구 */}
