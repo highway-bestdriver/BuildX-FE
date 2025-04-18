@@ -1,6 +1,7 @@
 import { HyperParameter } from "./blockData";
 
 export const preprocessingData: Record<string, HyperParameter[]> = {
+  Normalize: [{ name: "normalize", placeholder: "normalize" }],
   Resize: [
     { name: "height", placeholder: "높이 - 원하는 이미지 크기 값 (정수 값)" },
     { name: "width", placeholder: "너비- 원하는 이미지 크기 값 (정수 값)" },
