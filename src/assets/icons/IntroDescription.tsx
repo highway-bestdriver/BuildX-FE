@@ -56,7 +56,6 @@ const SvgIntroDescription = (props: SVGProps<SVGSVGElement>) => (
     />
     <foreignObject width={612} height={542} x={89} y={432}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: "blur(15px)",
           clipPath: "url(#IntroDescription_svg__e)",
@@ -87,7 +86,6 @@ const SvgIntroDescription = (props: SVGProps<SVGSVGElement>) => (
     </g>
     <foreignObject width={612} height={542} x={89} y={432}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: "blur(15px)",
           clipPath: "url(#IntroDescription_svg__f)",
@@ -118,7 +116,6 @@ const SvgIntroDescription = (props: SVGProps<SVGSVGElement>) => (
     </g>
     <foreignObject width={612} height={542} x={92} y={1002}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: "blur(15px)",
           clipPath: "url(#IntroDescription_svg__g)",
@@ -149,7 +146,6 @@ const SvgIntroDescription = (props: SVGProps<SVGSVGElement>) => (
     </g>
     <foreignObject width={612} height={542} x={92} y={1002}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: "blur(15px)",
           clipPath: "url(#IntroDescription_svg__h)",
@@ -188,7 +184,6 @@ const SvgIntroDescription = (props: SVGProps<SVGSVGElement>) => (
     />
     <foreignObject width={612} height={542} x={686} y={739}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: "blur(15px)",
           clipPath: "url(#IntroDescription_svg__i)",
@@ -219,7 +214,6 @@ const SvgIntroDescription = (props: SVGProps<SVGSVGElement>) => (
     </g>
     <foreignObject width={612} height={542} x={686} y={739}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: "blur(15px)",
           clipPath: "url(#IntroDescription_svg__j)",
@@ -250,7 +244,6 @@ const SvgIntroDescription = (props: SVGProps<SVGSVGElement>) => (
     </g>
     <foreignObject width={612} height={542} x={690} y={170}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: "blur(15px)",
           clipPath: "url(#IntroDescription_svg__k)",
@@ -281,7 +274,6 @@ const SvgIntroDescription = (props: SVGProps<SVGSVGElement>) => (
     </g>
     <foreignObject width={612} height={542} x={690} y={170}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: "blur(15px)",
           clipPath: "url(#IntroDescription_svg__l)",
@@ -566,7 +558,6 @@ const SvgIntroDescription = (props: SVGProps<SVGSVGElement>) => (
     />
     <foreignObject width={991} height={205} x={294} y={1991}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: "blur(17.5px)",
           clipPath: "url(#IntroDescription_svg__x)",
@@ -595,7 +586,6 @@ const SvgIntroDescription = (props: SVGProps<SVGSVGElement>) => (
     </g>
     <foreignObject width={991} height={205} x={294} y={1991}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: "blur(17.5px)",
           clipPath: "url(#IntroDescription_svg__z)",
@@ -744,7 +734,6 @@ const SvgIntroDescription = (props: SVGProps<SVGSVGElement>) => (
     />
     <foreignObject width={1134} height={217} x={207} y={2422}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: "blur(17.5px)",
           clipPath: "url(#IntroDescription_svg__H)",
@@ -773,7 +762,6 @@ const SvgIntroDescription = (props: SVGProps<SVGSVGElement>) => (
     </g>
     <foreignObject width={1134} height={217} x={207} y={2422}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: "blur(17.5px)",
           clipPath: "url(#IntroDescription_svg__J)",
@@ -812,7 +800,6 @@ const SvgIntroDescription = (props: SVGProps<SVGSVGElement>) => (
     />
     <foreignObject width={1143} height={217} x={99} y={2190}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: "blur(17.5px)",
           clipPath: "url(#IntroDescription_svg__L)",
@@ -841,7 +828,6 @@ const SvgIntroDescription = (props: SVGProps<SVGSVGElement>) => (
     </g>
     <foreignObject width={1143} height={217} x={99} y={2190}>
       <div
-        xmlns="http://www.w3.org/1999/xhtml"
         style={{
           backdropFilter: "blur(17.5px)",
           clipPath: "url(#IntroDescription_svg__N)",

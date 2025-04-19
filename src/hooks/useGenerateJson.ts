@@ -13,6 +13,7 @@ export const useGenerateJson = () => {
     };
 
     // 전처리값을 숫자로 변환
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const parsedPreprocessing: Record<string, any> = {};
     Object.entries(preprocessing).forEach(([method, params]) => {
       parsedPreprocessing[method] = {};
@@ -26,7 +27,8 @@ export const useGenerateJson = () => {
     });
 
     // layers 변환 (uuid 제외)
-    const parsedLayers = layers.map(({ uuid, ...rest }) => {
+    const parsedLayers = layers.map(({ ...rest }) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const parsed: Record<string, any> = {};
       Object.entries(rest).forEach(([key, val]) => {
         try {

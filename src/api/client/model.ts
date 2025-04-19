@@ -1,7 +1,8 @@
-import { privateApi, publicApi } from "@api/client";
+import { privateApi } from "@api/client";
 
 export const modelApi = {
   // 코드 생성하기
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   generateCode: async (body: any) => {
     const response = await privateApi.post<{ code: string }>(
       `/code/generate`,
@@ -10,12 +11,9 @@ export const modelApi = {
     return response;
   },
 
-  // 코드 돌리기
-  runCode: async () => {},
-
   // 코드 피드백
-  feedbackCode: async (body: any) => {
-    const response = await privateApi.post<{}>(`/code/feedback`, body);
-    return response;
-  },
+  // feedbackCode: async (body: any) => {
+  //   const response = await privateApi.post<{}>(`/code/feedback`, body);
+  //   return response;
+  // },
 };

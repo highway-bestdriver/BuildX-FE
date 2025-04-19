@@ -20,7 +20,7 @@ const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
 
   useEffect(() => {
     if (existing) {
-      const { uuid, type, ...rest } = existing;
+      const { ...rest } = existing;
       setInputs(rest as Record<string, string>); // 타입 단순 단언
     }
   }, [existing]);

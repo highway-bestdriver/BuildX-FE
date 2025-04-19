@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useModelStore } from "@store/useModelStore";
 import { modelApi } from "@api/client/model";
-import { token } from "@api/token";
 import { useGenerateJson } from "src/hooks/useGenerateJson";
 
 const Step4 = () => {
@@ -17,6 +16,7 @@ const Step4 = () => {
   const [learningRate, setLearningRate] = useState("");
 
   const [generatedCode, setGeneratedCode] = useState("");
+  const [isTraining, setIsTraining] = useState(false);
 
   // 고급 설정 완료 함수
   const handleComplete = () => {
@@ -44,72 +44,11 @@ const Step4 = () => {
 
   // 코드 훈련 함수
   const handleTrainCode = () => {
-    if (!generatedCode) {
-      alert("먼저 코드 생성을 완료해주세요.");
-      return;
-    }
-    const accessToken = token.sync() || "";
-    console.log("WebSocket 연결 시도...");
-    console.log("accessToken: " + accessToken);
-
-    // WebSocket 연결 설정
-    try {
-      const socket = new WebSocket(
-        `wss://buildlab.shop/ws/train?token=${accessToken}`
-      );
-
-      // 연결 성공 이벤트 핸들러
-      socket.onopen = () => {
-        console.log("WebSocket 연결 성공");
-
-        const parsedHyper = {
-          epochs: Number(epoch),
-          batch_size: Number(batchSize),
-          learning_rate: Number(learningRate),
-        };
-
-        const body = {
-          model_name: modelName,
-          dataset: datasetName,
-          form: parsedHyper,
-          code: generatedCode,
-        };
-
-        console.log("WebSocket 전송 body:", body);
-        socket.send(JSON.stringify(body));
-        console.log("send() 완료");
-      };
-
-      // 메시지 수신 이벤트 핸들러
-      socket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-
-        if (data.type === "epoch_log") {
-          console.log(
-            `[Epoch ${data.epoch}] Accuracy: ${data.accuracy}, Loss: ${data.loss}`
-          );
-        } else if (data.type === "final_metrics") {
-          console.log("최종 평가 지표:", data);
-        } else if (data.status) {
-          console.log("상태:", data.status);
-        } else if (data.error) {
-          console.error("에러:", data.error);
-        }
-      };
-
-      // 연결 종료 이벤트 핸들러
-      socket.onclose = (event) => {
-        console.warn("WebSocket 연결 종료됨:", event.code, event.reason);
-      };
-
-      // 에러 처리 이벤트 핸들러
-      socket.onerror = (event) => {
-        console.error("WebSocket 오류 발생:", event);
-      };
-    } catch (err) {
-      console.error("WebSocket 생성 중 예외 발생:", err);
-      alert("웹소켓 연결을 시도하는 중 오류가 발생했습니다.");
-    }
+    setIsTraining(true);
+    setTimeout(() => {
+      setIsTraining(false);
+      alert("훈련이 완료되었습니다.");
+    }, 5000); // 5초간 로딩
   };
 
   return (
@@ -159,20 +98,43 @@ const Step4 = () => {
         </div>
       </article>
 
-      <div className="mt-12 flex flex-row w-full gap-6 items-center justify-center">
+      <div className="mt-8 flex flex-row w-full gap-6 items-center justify-center">
         <div
           onClick={handleGenerateCode}
           className="px-6 py-2 inline-block text-2xl suit_16_B bg-main_orange text-black hover:bg-orange-400 cursor-pointer border-[8px] rounded-[20px]"
         >
           코드 생성
         </div>
-        <div
-          onClick={handleTrainCode}
-          className="px-6 py-2 inline-block text-2xl suit_16_B bg-main_orange text-black hover:bg-orange-400 cursor-pointer border-[8px] rounded-[20px]"
-        >
-          코드 훈련
-        </div>
       </div>
+      {generatedCode && (
+        <>
+          <div className="flex flex-col mt-10 w-full bg-gray-100 p-4 rounded-md shadow-md">
+            <h3 className="text-lg font-semibold mb-2 text-main_black">
+              생성된 코드
+            </h3>
+            <pre className="text-sm whitespace-pre-wrap text-gray-800">
+              {generatedCode}
+            </pre>
+          </div>
+
+          {/* 훈련 로딩/버튼 영역 */}
+          <div className="mt-8">
+            {isTraining ? (
+              <div className="flex flex-col items-center gap-2 text-main_black">
+                <div className="w-8 h-8 border-4 border-orange-300 border-t-transparent rounded-full animate-spin" />
+                <div className="suit_16_SB mt-2">코드 훈련 중입니다...</div>
+              </div>
+            ) : (
+              <div
+                onClick={handleTrainCode}
+                className="px-6 py-2 inline-block text-2xl suit_16_B bg-main_orange text-black hover:bg-orange-400 cursor-pointer border-[8px] rounded-[20px]"
+              >
+                코드 훈련
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };
