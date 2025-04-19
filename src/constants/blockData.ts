@@ -32,8 +32,8 @@ export const hyperParameterMap: Record<string, HyperParameter[]> = {
     { name: "strides", placeholder: "ex. [1,1]" },
     { name: "padding", placeholder: "valid | same" },
     { name: "activation", placeholder: "relu | sigmoid | tanh | linear" },
-    { name: "dilation_rate", placeholder: "ex. [1,1]" },
-    { name: "use_bias", placeholder: "true | false" },
+    // { name: "dilation_rate", placeholder: "ex. [1,1]" },
+    // { name: "use_bias", placeholder: "true | false" },
   ],
   Pooling: [
     { name: "pooling_type", placeholder: "max | avg" },

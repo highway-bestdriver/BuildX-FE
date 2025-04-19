@@ -3,23 +3,22 @@
 import { useState } from "react";
 import { useModelStore } from "@store/useModelStore";
 import { modelApi } from "@api/client/model";
+import { token } from "@api/token";
+import { useGenerateJson } from "src/hooks/useGenerateJson";
 
 const Step4 = () => {
-  const {
-    modelName,
-    datasetName,
-    layers,
-    preprocessing,
-    hyperparameters,
-    setHyperparameters,
-  } = useModelStore();
+  const { modelName, datasetName, layers, setHyperparameters } =
+    useModelStore();
+  const { getRequestBody } = useGenerateJson();
 
+  // 고급 설정 입력값
   const [epoch, setEpoch] = useState("");
   const [batchSize, setBatchSize] = useState("");
   const [learningRate, setLearningRate] = useState("");
 
   const [generatedCode, setGeneratedCode] = useState("");
 
+  // 고급 설정 완료 함수
   const handleComplete = () => {
     setHyperparameters({
       epochs: epoch,
@@ -28,57 +27,88 @@ const Step4 = () => {
     });
   };
 
+  // 코드 생성 함수
   const handleGenerateCode = async () => {
     try {
-      // 하이퍼파라미터를 숫자로 변환
-      const parsedHyper = {
-        epochs: Number(hyperparameters.epochs),
-        batch_size: Number(hyperparameters.batch_size),
-        learning_rate: Number(hyperparameters.learning_rate),
-      };
-
-      // 전처리값도 변환
-      const parsedPreprocessing: Record<string, any> = {};
-      Object.entries(preprocessing).forEach(([method, params]) => {
-        parsedPreprocessing[method] = {};
-        Object.entries(params).forEach(([k, v]) => {
-          try {
-            parsedPreprocessing[method][k] = JSON.parse(v);
-          } catch {
-            parsedPreprocessing[method][k] = v;
-          }
-        });
-      });
-
-      // layers 변환 (uuid 제외)
-      const parsedLayers = layers.map(({ uuid, ...rest }) => {
-        const parsed: Record<string, any> = {};
-        Object.entries(rest).forEach(([key, val]) => {
-          try {
-            parsed[key] = JSON.parse(val!);
-          } catch {
-            parsed[key] = val;
-          }
-        });
-        return parsed;
-      });
-
-      const body = {
-        model_name: modelName,
-        dataset: datasetName,
-        layers: parsedLayers,
-        preprocessing: parsedPreprocessing,
-        hyperparameters: parsedHyper,
-      };
+      const body = getRequestBody();
 
       console.log("보내는 body:", JSON.stringify(body, null, 2));
       const res = await modelApi.generateCode(body);
       setGeneratedCode(res.code);
-      console.log("response: " + res);
-      console.log("generatedCode: " + res.code);
+      console.log("generatedCode: " + generatedCode);
     } catch (error) {
       console.error("코드 생성 실패: ", error);
       alert("코드 생성에 실패했습니다.");
+    }
+  };
+
+  // 코드 훈련 함수
+  const handleTrainCode = () => {
+    if (!generatedCode) {
+      alert("먼저 코드 생성을 완료해주세요.");
+      return;
+    }
+    const accessToken = token.sync() || "";
+    console.log("WebSocket 연결 시도...");
+    console.log("accessToken: " + accessToken);
+
+    // WebSocket 연결 설정
+    try {
+      const socket = new WebSocket(
+        `wss://buildlab.shop/ws/train?token=${accessToken}`
+      );
+
+      // 연결 성공 이벤트 핸들러
+      socket.onopen = () => {
+        console.log("WebSocket 연결 성공");
+
+        const parsedHyper = {
+          epochs: Number(epoch),
+          batch_size: Number(batchSize),
+          learning_rate: Number(learningRate),
+        };
+
+        const body = {
+          model_name: modelName,
+          dataset: datasetName,
+          form: parsedHyper,
+          code: generatedCode,
+        };
+
+        console.log("WebSocket 전송 body:", body);
+        socket.send(JSON.stringify(body));
+        console.log("send() 완료");
+      };
+
+      // 메시지 수신 이벤트 핸들러
+      socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+
+        if (data.type === "epoch_log") {
+          console.log(
+            `[Epoch ${data.epoch}] Accuracy: ${data.accuracy}, Loss: ${data.loss}`
+          );
+        } else if (data.type === "final_metrics") {
+          console.log("최종 평가 지표:", data);
+        } else if (data.status) {
+          console.log("상태:", data.status);
+        } else if (data.error) {
+          console.error("에러:", data.error);
+        }
+      };
+
+      // 연결 종료 이벤트 핸들러
+      socket.onclose = (event) => {
+        console.warn("WebSocket 연결 종료됨:", event.code, event.reason);
+      };
+
+      // 에러 처리 이벤트 핸들러
+      socket.onerror = (event) => {
+        console.error("WebSocket 오류 발생:", event);
+      };
+    } catch (err) {
+      console.error("WebSocket 생성 중 예외 발생:", err);
+      alert("웹소켓 연결을 시도하는 중 오류가 발생했습니다.");
     }
   };
 
@@ -129,12 +159,19 @@ const Step4 = () => {
         </div>
       </article>
 
-      <div className="mt-12" />
-      <div
-        onClick={handleGenerateCode}
-        className="px-6 py-2 inline-block text-2xl suit_16_B bg-main_orange text-black hover:bg-orange-400 cursor-pointer border-[8px] rounded-[20px]"
-      >
-        코드 생성
+      <div className="mt-12 flex flex-row w-full gap-6 items-center justify-center">
+        <div
+          onClick={handleGenerateCode}
+          className="px-6 py-2 inline-block text-2xl suit_16_B bg-main_orange text-black hover:bg-orange-400 cursor-pointer border-[8px] rounded-[20px]"
+        >
+          코드 생성
+        </div>
+        <div
+          onClick={handleTrainCode}
+          className="px-6 py-2 inline-block text-2xl suit_16_B bg-main_orange text-black hover:bg-orange-400 cursor-pointer border-[8px] rounded-[20px]"
+        >
+          코드 훈련
+        </div>
       </div>
     </div>
   );
