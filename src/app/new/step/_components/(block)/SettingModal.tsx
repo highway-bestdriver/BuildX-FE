@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import SettingInput from "./SettingInput";
 import { hyperParameterMap } from "@constants/blockData";
-import { useBlockStore } from "@store/useBlockStore";
+import { useModelStore } from "@store/useModelStore";
 
 interface SettingModalProps {
   label: string;
@@ -14,14 +14,14 @@ interface SettingModalProps {
 const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
   const paramList = hyperParameterMap[label] || [];
 
-  const { setBlockSetting, getBlockSetting } = useBlockStore();
-  const existing = getBlockSetting(blockUUID);
+  const { updateLayer, getLayerByUUID } = useModelStore();
+  const existing = getLayerByUUID(blockUUID);
   const [inputs, setInputs] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (existing) {
-      const { id, input, params } = existing;
-      setInputs({ id, input: input ?? "", ...params });
+      const { ...rest } = existing;
+      setInputs(rest as Record<string, string>); // 타입 단순 단언
     }
   }, [existing]);
 
@@ -31,7 +31,14 @@ const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
 
   const handleSave = () => {
     const { id, input, ...params } = inputs;
-    setBlockSetting(blockUUID, { id, input, type: label, params });
+    const flattenedLayer = {
+      uuid: blockUUID,
+      id,
+      input,
+      type: label,
+      ...params,
+    };
+    updateLayer(flattenedLayer);
     onClose();
   };
 

@@ -4,8 +4,9 @@ import Step1 from "../Step1";
 import Step2 from "../Step2";
 import Step3 from "../Step3";
 import Step4 from "../Step4";
-import Button from "@common/Button";
 import Step5 from "../Step5";
+import Button from "@common/Button";
+
 import {
   Progressbar1,
   Progressbar2,
@@ -13,9 +14,11 @@ import {
   Progressbar4,
   Progressbar5,
 } from "@assets/icons";
+import Link from "next/link";
 
 const StepPage = () => {
   const { step } = useParams();
+  const stepNum = parseInt(step as string); // 숫자로 변환
 
   const renderStep = () => {
     switch (step) {
@@ -64,11 +67,19 @@ const StepPage = () => {
       {/* 단계이동 버튼 */}
       <span className="w-full flex flex-row justify-between my-12">
         {step != "1" ? (
-          <Button text="< 이전으로&nbsp;" isWhite={true} />
+          <Link href={`/new/step/${stepNum - 1}`}>
+            <Button text="< 이전으로&nbsp;" isWhite={true} />
+          </Link>
         ) : (
           <div></div>
         )}
-        {step != "5" ? <Button text="&nbsp;다음으로 >" /> : <div></div>}
+        {step != "5" ? (
+          <Link href={`/new/step/${stepNum + 1}`}>
+            <Button text="&nbsp;다음으로 >" />{" "}
+          </Link>
+        ) : (
+          <div />
+        )}
       </span>
     </>
   );

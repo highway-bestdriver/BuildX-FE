@@ -1,16 +1,25 @@
-import { IcBluePlus, IcTensorflow, ImgStep1 } from "@assets/icons";
-import Class from "./_components/Class";
+"use client";
+
 import { useState } from "react";
+import Class from "./_components/Class";
 import { tfDatasetList } from "@constants/tfDatasetList";
+import { IcBluePlus, IcTensorflow, ImgStep1 } from "@assets/icons";
+import { useModelStore } from "@store/useModelStore";
 
 const Step1 = () => {
   const [classes, setClasses] = useState<number[]>([1, 2]);
+  const [selectedDataset, setSelectedDataset] = useState<string | null>(null);
+  const setDatasetName = useModelStore((state) => state.setDatasetName);
+
+  const handleDatasetChange = (name: string) => {
+    setSelectedDataset(name);
+    setDatasetName(name);
+    console.log("name: " + name);
+  };
 
   const handleAddClass = () => {
     setClasses((prev) => [...prev, prev.length + 1]);
   };
-
-  const [selectedDataset, setSelectedDataset] = useState<string | null>(null);
 
   const renderDataset = () => (
     <div className="grid grid-cols-3 gap-2 px-4 py-1">
@@ -23,7 +32,7 @@ const Step1 = () => {
             type="radio"
             value={name}
             checked={selectedDataset === name}
-            onChange={() => setSelectedDataset(name)}
+            onChange={() => handleDatasetChange(name)}
             className="accent-main_blue"
           />
           <span>{name}</span>

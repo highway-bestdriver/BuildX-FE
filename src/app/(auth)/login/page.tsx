@@ -1,9 +1,30 @@
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Google } from "@assets/icons";
 import Button from "@common/Button";
 import InputField from "../_components/InputField";
 import Link from "next/link";
+import { authApi } from "@api/client/auth";
+import { token } from "@api/token";
 
 const LoginPage = () => {
+  const router = useRouter();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async () => {
+    try {
+      const response = await authApi.postLogin(username, password);
+      token.set(response.access_token, "accessToken");
+      router.push("/");
+      router.refresh();
+    } catch (error) {
+      console.error("로그인 실패: ", error);
+    }
+  };
+
   return (
     <div className="flex flex-col w-full justify-center items-center">
       <div className="triangle_48_SB pt-20 pb-30">Login</div>
@@ -15,17 +36,23 @@ const LoginPage = () => {
           name="username"
           placeholder="아이디를 입력해 주세요."
           isLogin={true}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
         />
         <InputField
           label="PW"
           name="password"
           placeholder="비밀번호를 입력해 주세요."
           isLogin={true}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
       </article>
 
       <div className="h-30" />
-      <Button text="로그인하기" />
+      <span onClick={handleLogin}>
+        <Button text="로그인하기" />
+      </span>
       <div className="geist_16_M py-4">or</div>
       <div className="flex justify-center items-center rounded-[20px] border-[8px] border-black py-2 px-6 cursor-pointer gap-3">
         <Google width={30} />

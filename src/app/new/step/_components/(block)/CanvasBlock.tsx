@@ -12,6 +12,7 @@ interface BlockProps {
   x: number;
   y: number;
   isModalOpen: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   canvasRef: React.RefObject<HTMLDivElement> | any;
   onRemove: (id: string, e: React.MouseEvent) => void;
   onOpenModal: (id: string) => void;

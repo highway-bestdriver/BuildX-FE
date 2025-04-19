@@ -10,7 +10,7 @@ import { IcCalendar, IcLines, IcStar } from "@assets/icons";
 
 const ProjectsDetail = () => {
   const params = useParams();
-  const id = params.id as string;
+  // const id = params.id as string;
 
   const project = projectDetailData.find(
     (item) => item.id.toString() === params.id

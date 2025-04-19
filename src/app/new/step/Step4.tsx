@@ -1,124 +1,139 @@
-import { useEffect, useRef, useState } from "react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  ResponsiveContainer,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  Radar,
-} from "recharts";
+"use client";
 
-export interface EpochLog {
-  epoch: number;
-  accuracy: number;
-  loss: number;
-}
-
-export interface FinalMetrics {
-  precision: number;
-  recall: number;
-  f1_score: number;
-  auc: number;
-}
-
-const baseUrl = "http://3.36.174.211";
+import { useState } from "react";
+import { useModelStore } from "@store/useModelStore";
+import { modelApi } from "@api/client/model";
+import { useGenerateJson } from "src/hooks/useGenerateJson";
 
 const Step4 = () => {
-  const [epochLogs, setEpochLogs] = useState<EpochLog[]>([]);
-  const [finalMetrics, setFinalMetrics] = useState<FinalMetrics | null>(null);
-  const [trainingDone, setTrainingDone] = useState(false);
-  const socketRef = useRef<WebSocket | null>(null);
+  const { modelName, datasetName, layers, setHyperparameters } =
+    useModelStore();
+  const { getRequestBody } = useGenerateJson();
 
-  useEffect(() => {
-    const socket = new WebSocket(`${baseUrl}/ws/train`);
-    socketRef.current = socket;
+  // 고급 설정 입력값
+  const [epoch, setEpoch] = useState("");
+  const [batchSize, setBatchSize] = useState("");
+  const [learningRate, setLearningRate] = useState("");
 
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
+  const [generatedCode, setGeneratedCode] = useState("");
+  const [isTraining, setIsTraining] = useState(false);
 
-      if (data.type === "epoch_log") {
-        setEpochLogs((prev) => [...prev, data]);
-      } else if (data.type === "final_metrics") {
-        setFinalMetrics(data);
-      } else if (data.status === "학습 완료") {
-        setTrainingDone(true);
-        socket.close();
-      }
-    };
+  // 고급 설정 완료 함수
+  const handleComplete = () => {
+    setHyperparameters({
+      epochs: epoch,
+      batch_size: batchSize,
+      learning_rate: learningRate,
+    });
+  };
 
-    socket.onclose = () => {
-      console.log("WebSocket connection closed");
-    };
+  // 코드 생성 함수
+  const handleGenerateCode = async () => {
+    try {
+      const body = getRequestBody();
 
-    return () => {
-      socket.close();
-    };
-  }, []);
+      console.log("보내는 body:", JSON.stringify(body, null, 2));
+      const res = await modelApi.generateCode(body);
+      setGeneratedCode(res.code);
+      console.log("generatedCode: " + generatedCode);
+    } catch (error) {
+      console.error("코드 생성 실패: ", error);
+      alert("코드 생성에 실패했습니다.");
+    }
+  };
+
+  // 코드 훈련 함수
+  const handleTrainCode = () => {
+    setIsTraining(true);
+    setTimeout(() => {
+      setIsTraining(false);
+      alert("훈련이 완료되었습니다.");
+    }, 5000); // 5초간 로딩
+  };
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 py-8">
-      <h2 className="text-2xl suit_16_B mb-6">📊 학습 모니터링 (Step 4)</h2>
+    <div className="flex flex-col w-full items-center  px-4 py-6 mt-12">
+      <article className="flex w-[90%] flex-row justify-between">
+        <div className="p-4 text-gray-600 suit_16_M flex flex-col gap-4">
+          <p>- 데이터셋: {datasetName}</p>
+          <p>- 모델명: {modelName}</p>
+          <p>- 레이어 수: {layers.length}</p>
+        </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-        <h3 className="text-lg font-semibold mb-3">
-          📈 Epoch별 Accuracy / Loss
-        </h3>
-
-        {/* LineChart */}
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={epochLogs}>
-            <CartesianGrid stroke="#ccc" />
-            <XAxis dataKey="epoch" />
-            <YAxis />
-            <Tooltip />
-            <Line
-              type="monotone"
-              dataKey="accuracy"
-              stroke="#8884d8"
-              name="Accuracy"
+        {/* 고급 설정 */}
+        <div className="suit_16_M flex flex-col bg-white p-4 rounded-xl gap-4">
+          <div className="suit_16_B text-lg">고급</div>
+          <span className="flex flex-row justify-between items-center gap-2">
+            <span>에포크: </span>
+            <input
+              className="flex-1 suit_16_R border-0 border-b border-main_black pb-1"
+              value={epoch}
+              onChange={(e) => setEpoch(e.target.value)}
             />
-            <Line type="monotone" dataKey="loss" stroke="#82ca9d" name="Loss" />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* RadarChart */}
-      {finalMetrics && (
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h3 className="text-lg suit_16_B mb-3">🏁 최종 평가 지표</h3>
-          <ResponsiveContainer width="100%" height={350}>
-            <RadarChart
-              outerRadius={120}
-              data={Object.entries(finalMetrics).map(([k, v]) => ({
-                metric: k,
-                value: v,
-              }))}
+          </span>
+          <span className="flex flex-row justify-between items-center gap-2">
+            <span>배치 크기: </span>
+            <input
+              className="flex-1 suit_16_R border-0 border-b border-main_black pb-1"
+              value={batchSize}
+              onChange={(e) => setBatchSize(e.target.value)}
+            />
+          </span>
+          <span className="flex flex-row justify-between items-center gap-2">
+            <span>학습률: </span>
+            <input
+              className="flex-1 suit_16_R border-0 border-b border-main_black pb-1"
+              value={learningRate}
+              onChange={(e) => setLearningRate(e.target.value)}
+            />
+          </span>
+          <div className="flex justify-center mt-6">
+            <span
+              onClick={handleComplete}
+              className="px-4 py-2 text-lg suit_16_SB bg-gray-400 text-white rounded-lg hover:bg-gray-500 cursor-pointer"
             >
-              <PolarGrid />
-              <PolarAngleAxis dataKey="metric" />
-              <PolarRadiusAxis angle={30} domain={[0, 100]} />
-              <Radar
-                name="성능"
-                dataKey="value"
-                stroke="#8884d8"
-                fill="#8884d8"
-                fillOpacity={0.6}
-              />
-            </RadarChart>
-          </ResponsiveContainer>
+              Complete
+            </span>
+          </div>
         </div>
-      )}
+      </article>
 
-      {trainingDone && (
-        <div className="mt-6 p-4 rounded-md bg-green-100 text-green-700 text-center suit_16_SB">
-          모델 학습이 완료되었습니다.
+      <div className="mt-8 flex flex-row w-full gap-6 items-center justify-center">
+        <div
+          onClick={handleGenerateCode}
+          className="px-6 py-2 inline-block text-2xl suit_16_B bg-main_orange text-black hover:bg-orange-400 cursor-pointer border-[8px] rounded-[20px]"
+        >
+          코드 생성
         </div>
+      </div>
+      {generatedCode && (
+        <>
+          <div className="flex flex-col mt-10 w-full bg-gray-100 p-4 rounded-md shadow-md">
+            <h3 className="text-lg font-semibold mb-2 text-main_black">
+              생성된 코드
+            </h3>
+            <pre className="text-sm whitespace-pre-wrap text-gray-800">
+              {generatedCode}
+            </pre>
+          </div>
+
+          {/* 훈련 로딩/버튼 영역 */}
+          <div className="mt-8">
+            {isTraining ? (
+              <div className="flex flex-col items-center gap-2 text-main_black">
+                <div className="w-8 h-8 border-4 border-orange-300 border-t-transparent rounded-full animate-spin" />
+                <div className="suit_16_SB mt-2">코드 훈련 중입니다...</div>
+              </div>
+            ) : (
+              <div
+                onClick={handleTrainCode}
+                className="px-6 py-2 inline-block text-2xl suit_16_B bg-main_orange text-black hover:bg-orange-400 cursor-pointer border-[8px] rounded-[20px]"
+              >
+                코드 훈련
+              </div>
+            )}
+          </div>
+        </>
       )}
     </div>
   );
