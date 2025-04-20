@@ -33,6 +33,7 @@ const Step4 = () => {
     setIsGenerating(true);
     try {
       const body = getRequestBody();
+      console.log("body:" + JSON.stringify(body, null, 2));
       const res = await modelApi.generateCode(body);
       setGeneratedCode(res.code);
     } catch (error) {
