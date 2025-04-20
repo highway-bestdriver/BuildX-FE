@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useEffect, useState } from "react";
-import { feedbackList } from "@constants/resultData";
+import { metricsList, feedbackList } from "@constants/resultData";
 
 const Step5 = () => {
   const [metrics, setMetrics] = useState<null | {
@@ -26,17 +26,8 @@ const Step5 = () => {
   // 클라이언트에서만 실행
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const randomInRange = (min: number, max: number, decimals = 4) =>
-        Number((Math.random() * (max - min) + min).toFixed(decimals));
-
-      setMetrics({
-        accuracy: randomInRange(0.6, 0.9),
-        precision: randomInRange(0.5, 0.85),
-        recall: randomInRange(0.5, 0.85),
-        f1_score: randomInRange(0.5, 0.85),
-        auc_roc: randomInRange(0.6, 0.95),
-        loss: randomInRange(0.2, 0.6),
-      });
+      const metricIdx = Math.floor(Math.random() * metricsList.length);
+      setMetrics(metricsList[metricIdx]);
 
       const idx = Math.floor(Math.random() * feedbackList.length);
       setRdFeedback(feedbackList[idx]);
@@ -55,13 +46,19 @@ const Step5 = () => {
     );
   }
 
+  const minLoss = 0.2;
+  const maxLoss = 1.5;
+
   const data = [
     { metric: "정확도", value: metrics.accuracy },
     { metric: "정밀도", value: metrics.precision },
     { metric: "재현율", value: metrics.recall },
     { metric: "f1-score", value: metrics.f1_score },
     { metric: "AUC-ROC", value: metrics.auc_roc },
-    { metric: "loss", value: 1 - metrics.loss },
+    {
+      metric: "normalized loss",
+      value: 1 - (metrics.loss - minLoss) / (maxLoss - minLoss),
+    },
   ];
 
   return (
@@ -84,6 +81,7 @@ const Step5 = () => {
                 stroke="#ff7300"
                 fill="#ff7300"
                 fillOpacity={0.6}
+                label={false}
               />
             </RadarChart>
           </ResponsiveContainer>
@@ -96,8 +94,14 @@ const Step5 = () => {
               key={metric}
               className="flex justify-between border-b py-1 px-2"
             >
-              <span className="font-medium">{metric}</span>
-              <span>{(value * 100).toFixed(2)}%</span>
+              <span className="font-medium">
+                {metric === "normalized loss" ? "loss" : metric}
+              </span>
+              <span>
+                {metric === "normalized loss"
+                  ? metrics.loss.toFixed(2)
+                  : `${(value * 100).toFixed(2)}%`}
+              </span>
             </div>
           ))}
         </div>
