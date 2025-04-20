@@ -54,6 +54,7 @@ const SignupPage = () => {
           name="password"
           placeholder="비밀번호를 입력해 주세요."
           value={password}
+          type="password"
           onChange={(e) => setPassword(e.target.value)}
         />
         <InputField
@@ -61,6 +62,7 @@ const SignupPage = () => {
           name="rePassword"
           placeholder="비밀번호를 다시 한 번 입력해 주세요."
           value={rePassword}
+          type="password"
           onChange={(e) => setRePassword(e.target.value)}
         />
         <InputField

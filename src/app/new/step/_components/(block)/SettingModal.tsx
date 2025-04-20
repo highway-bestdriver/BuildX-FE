@@ -45,7 +45,7 @@ const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
   };
 
   const handleSave = () => {
-    const { id, input, type, ...params } = inputs;
+    const { id, input, ...params } = inputs;
     const flattenedLayer = {
       uuid: blockUUID,
       id,

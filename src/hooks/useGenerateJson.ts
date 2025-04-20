@@ -28,6 +28,7 @@ export const useGenerateJson = () => {
 
     // layers 변환 (uuid 제외)
     const parsedLayers = layers.map((layer) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const parsed: Record<string, any> = {};
 
       Object.entries(layer).forEach(([key, val]) => {

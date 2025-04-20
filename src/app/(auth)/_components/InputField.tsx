@@ -3,6 +3,7 @@ type InputFieldProps = {
   name: string;
   placeholder: string;
   isLogin?: boolean;
+  type?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
@@ -12,6 +13,7 @@ const InputField = ({
   name,
   placeholder,
   isLogin = false,
+  type = "text",
   value,
   onChange,
 }: InputFieldProps) => (
@@ -22,6 +24,7 @@ const InputField = ({
       name={name}
       placeholder={placeholder}
       value={value}
+      type={type}
       onChange={onChange}
     />
   </div>
