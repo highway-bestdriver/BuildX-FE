@@ -1,13 +1,19 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-// 각 레이어 블록 형식
+// 레이어 블록
 export type LayerBlock = {
-  uuid: string; // 드래그 위치 관리용 내부 ID
+  uuid: string; // 드래그 관리용 내부 ID
   id: string; // 사용자 입력 ID
   type: string;
   input?: string;
   [key: string]: string | undefined;
+};
+
+// 블록 간 연결선
+export type Connection = {
+  fromId: string; // input 블록 id
+  toId: string; // 현재 블록 uuid
 };
 
 // 전체 모델 정보 저장
@@ -21,6 +27,7 @@ export interface ModelState {
     learning_rate: string;
   };
   layers: LayerBlock[];
+  connections: Connection[];
 
   setModelName: (name: string) => void;
   setDatasetName: (name: string) => void;
@@ -30,6 +37,9 @@ export interface ModelState {
   updateLayer: (layer: LayerBlock) => void;
   getLayerByUUID: (uuid: string) => LayerBlock | undefined;
   removeLayer: (uuid: string) => void;
+
+  addConnection: (fromId: string, toId: string) => void;
+  removeConnection: (toId: string) => void;
 }
 
 export const useModelStore = create<ModelState>()(
@@ -44,6 +54,7 @@ export const useModelStore = create<ModelState>()(
         learning_rate: "",
       },
       layers: [],
+      connections: [],
 
       setModelName: (name) => set({ modelName: name }),
       setDatasetName: (name) => set({ datasetName: name }),
@@ -62,6 +73,15 @@ export const useModelStore = create<ModelState>()(
       removeLayer: (uuid) =>
         set((state) => ({
           layers: state.layers.filter((l) => l.uuid !== uuid),
+        })),
+
+      addConnection: (fromId, toId) =>
+        set((state) => ({
+          connections: [...state.connections, { fromId, toId }],
+        })),
+      removeConnection: (toId) =>
+        set((state) => ({
+          connections: state.connections.filter((c) => c.toId !== toId),
         })),
     }),
     {

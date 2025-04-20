@@ -27,16 +27,22 @@ export const useGenerateJson = () => {
     });
 
     // layers 변환 (uuid 제외)
-    const parsedLayers = layers.map(({ ...rest }) => {
+    const parsedLayers = layers.map((layer) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const parsed: Record<string, any> = {};
-      Object.entries(rest).forEach(([key, val]) => {
-        try {
-          parsed[key] = JSON.parse(val!);
-        } catch {
-          parsed[key] = val;
+
+      Object.entries(layer).forEach(([key, val]) => {
+        if (["uuid", "id", "type", "input"].includes(key)) {
+          parsed[key] = val; // 문자열로 유지
+        } else {
+          try {
+            parsed[key] = JSON.parse(val!);
+          } catch {
+            parsed[key] = val;
+          }
         }
       });
+
       return parsed;
     });
 
