@@ -21,7 +21,7 @@ const Step5 = () => {
   ];
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 py-8 flex flex-col gap-10">
+    <div className="w-full max-w-5xl mx-auto px-4 py-8 flex flex-col gap-8">
       <h2 className="text-2xl suit_16_B text-main_black text-center">
         최종 평가 지표
       </h2>
@@ -46,7 +46,7 @@ const Step5 = () => {
 
       {/* GPT 분석 평가 */}
       <div className="bg-white shadow-md rounded-xl p-6">
-        <h3 className="text-xl suit_16_SB text-main_black mb-4">
+        <h3 className="text-xl suit_16_B text-main_black mb-4">
           # 종합 분석 평가
         </h3>
         <div className="text-gray-700 text-sm whitespace-pre-wrap leading-relaxed">

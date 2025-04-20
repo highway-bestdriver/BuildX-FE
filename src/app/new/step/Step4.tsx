@@ -10,15 +10,14 @@ const Step4 = () => {
     useModelStore();
   const { getRequestBody } = useGenerateJson();
 
-  // 고급 설정 입력값
   const [epoch, setEpoch] = useState("");
   const [batchSize, setBatchSize] = useState("");
   const [learningRate, setLearningRate] = useState("");
 
   const [generatedCode, setGeneratedCode] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
   const [isTraining, setIsTraining] = useState(false);
 
-  // 고급 설정 완료 함수
   const handleComplete = () => {
     setHyperparameters({
       epochs: epoch,
@@ -27,32 +26,30 @@ const Step4 = () => {
     });
   };
 
-  // 코드 생성 함수
   const handleGenerateCode = async () => {
+    setIsGenerating(true);
     try {
       const body = getRequestBody();
-
-      console.log("보내는 body:", JSON.stringify(body, null, 2));
       const res = await modelApi.generateCode(body);
       setGeneratedCode(res.code);
-      console.log("generatedCode: " + generatedCode);
     } catch (error) {
       console.error("코드 생성 실패: ", error);
       alert("코드 생성에 실패했습니다.");
+    } finally {
+      setIsGenerating(false);
     }
   };
 
-  // 코드 훈련 함수
   const handleTrainCode = () => {
     setIsTraining(true);
     setTimeout(() => {
       setIsTraining(false);
       alert("훈련이 완료되었습니다.");
-    }, 5000); // 5초간 로딩
+    }, 5000);
   };
 
   return (
-    <div className="flex flex-col w-full items-center  px-4 py-6 mt-12">
+    <div className="flex flex-col w-full items-center px-4 py-6 mt-12">
       <article className="flex w-[90%] flex-row justify-between">
         <div className="p-4 text-gray-600 suit_16_M flex flex-col gap-4">
           <p>- 데이터셋: {datasetName}</p>
@@ -60,7 +57,6 @@ const Step4 = () => {
           <p>- 레이어 수: {layers.length}</p>
         </div>
 
-        {/* 고급 설정 */}
         <div className="suit_16_M flex flex-col bg-white p-4 rounded-xl gap-4">
           <div className="suit_16_B text-lg">고급</div>
           <span className="flex flex-row justify-between items-center gap-2">
@@ -99,25 +95,32 @@ const Step4 = () => {
       </article>
 
       <div className="mt-8 flex flex-row w-full gap-6 items-center justify-center">
-        <div
-          onClick={handleGenerateCode}
-          className="px-6 py-2 inline-block text-2xl suit_16_B bg-main_orange text-black hover:bg-orange-400 cursor-pointer border-[8px] rounded-[20px]"
-        >
-          코드 생성
-        </div>
+        {isGenerating ? (
+          <div className="flex flex-col items-center text-main_black">
+            <div className="w-8 h-8 border-4 border-main_orange border-t-transparent rounded-full animate-spin" />
+            <div className="suit_16_SB mt-2">코드 생성 중입니다...</div>
+          </div>
+        ) : (
+          <div
+            onClick={handleGenerateCode}
+            className="px-6 py-2 inline-block text-2xl suit_16_B bg-main_orange text-black hover:bg-orange-400 cursor-pointer border-[8px] rounded-[20px]"
+          >
+            코드 생성
+          </div>
+        )}
       </div>
+
       {generatedCode && (
         <>
-          <div className="flex flex-col mt-10 w-full bg-gray-100 p-4 rounded-md shadow-md">
-            <h3 className="text-lg font-semibold mb-2 text-main_black">
+          <div className="flex flex-col mt-10 w-full bg-[#1e1e1e] text-white p-4 rounded-md shadow-md">
+            <h3 className="text-lg font-semibold mb-3 text-main_orange">
               생성된 코드
             </h3>
-            <pre className="text-sm whitespace-pre-wrap text-gray-800">
+            <pre className="text-sm whitespace-pre-wrap font-mono text-[#dcdcdc] leading-relaxed">
               {generatedCode}
             </pre>
           </div>
 
-          {/* 훈련 로딩/버튼 영역 */}
           <div className="mt-8">
             {isTraining ? (
               <div className="flex flex-col items-center gap-2 text-main_black">
