@@ -14,14 +14,29 @@ interface SettingModalProps {
 const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
   const paramList = hyperParameterMap[label] || [];
 
-  const { updateLayer, getLayerByUUID } = useModelStore();
+  const {
+    updateLayer,
+    getLayerByUUID,
+    layers,
+    removeConnection,
+    addConnection,
+  } = useModelStore();
   const existing = getLayerByUUID(blockUUID);
   const [inputs, setInputs] = useState<Record<string, string>>({});
+
+  // 기존 블록들의 id 목록을 input 후보로 택
+  const inputOptions = [
+    "x",
+    ...layers
+      .filter((layer) => layer.uuid !== blockUUID)
+      .map((layer) => layer.id)
+      .filter(Boolean),
+  ];
 
   useEffect(() => {
     if (existing) {
       const { ...rest } = existing;
-      setInputs(rest as Record<string, string>); // 타입 단순 단언
+      setInputs(rest as Record<string, string>);
     }
   }, [existing]);
 
@@ -30,7 +45,7 @@ const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
   };
 
   const handleSave = () => {
-    const { id, input, ...params } = inputs;
+    const { id, input, type, ...params } = inputs;
     const flattenedLayer = {
       uuid: blockUUID,
       id,
@@ -39,6 +54,12 @@ const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
       ...params,
     };
     updateLayer(flattenedLayer);
+
+    removeConnection(blockUUID);
+    if (input && input !== "x") {
+      addConnection(input, blockUUID);
+    }
+
     onClose();
   };
 
@@ -64,13 +85,23 @@ const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
           onChange={(val) => handleChange("id", val)}
           isDefault={true}
         />
-        <SettingInput
-          label="Input :"
-          placeholder="Input 블록의 ID를 입력하세요"
-          value={inputs["input"] || ""}
-          onChange={(val) => handleChange("input", val)}
-          isDefault={true}
-        />
+
+        <div className="flex flex-col">
+          <label className="text-sm text-gray-700 mb-1 suit_16_SB">
+            Input :
+          </label>
+          <select
+            className="border rounded px-2 py-1 text-sm suit_16_R"
+            value={inputs["input"] || "x"}
+            onChange={(e) => handleChange("input", e.target.value)}
+          >
+            {inputOptions.map((option) => (
+              <option key={option} value={option}>
+                {option === "x" ? "x (초기 입력)" : option}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* 동적 필드 */}
@@ -111,4 +142,5 @@ const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
     </div>
   );
 };
+
 export default SettingModal;
