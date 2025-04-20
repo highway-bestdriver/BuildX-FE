@@ -5,6 +5,9 @@ import { useModelStore } from "@store/useModelStore";
 import { modelApi } from "@api/client/model";
 import { useGenerateJson } from "src/hooks/useGenerateJson";
 
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+
 const Step4 = () => {
   const { modelName, datasetName, layers, setHyperparameters } =
     useModelStore();
@@ -113,11 +116,13 @@ const Step4 = () => {
       {generatedCode && (
         <>
           <div className="flex flex-col mt-10 w-full bg-[#1e1e1e] text-white p-4 rounded-md shadow-md">
-            <h3 className="text-lg font-semibold mb-3 text-main_orange">
-              생성된 코드
+            <h3 className="text-lg suit_16_SB mb-3 text-main_orange">
+              ㅣ 생성된 코드
             </h3>
             <pre className="text-sm whitespace-pre-wrap font-mono text-[#dcdcdc] leading-relaxed">
-              {generatedCode}
+              <SyntaxHighlighter language="python" style={vscDarkPlus}>
+                {generatedCode}
+              </SyntaxHighlighter>
             </pre>
           </div>
 
