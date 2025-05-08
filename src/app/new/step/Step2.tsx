@@ -3,7 +3,7 @@
 import { useState } from "react";
 import SettingInput from "./_components/(block)/SettingInput";
 import { preprocessingData } from "@constants/preprocessingData";
-import { useModelStore } from "@store/useModelStore";
+import { PreprocessingBlock, useModelStore } from "@store/useModelStore";
 
 const Step2 = () => {
   const [selected, setSelected] = useState<string[]>([]);
@@ -31,12 +31,15 @@ const Step2 = () => {
   };
 
   const handleComplete = () => {
-    const filtered: Record<string, Record<string, string>> = {};
-    selected.forEach((method) => {
-      filtered[method] = inputs[method] || {};
+    const formatted = selected.map((method) => {
+      const entry: PreprocessingBlock = {
+        type: method,
+        ...(inputs[method] || {}),
+      };
+      return entry;
     });
-    setPreprocessing(filtered);
-    console.log("전역 상태 저장 완료:", filtered);
+    setPreprocessing(formatted);
+    console.log("전역 상태 저장 완료:", formatted);
   };
 
   return (

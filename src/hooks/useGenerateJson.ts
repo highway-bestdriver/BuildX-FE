@@ -13,17 +13,18 @@ export const useGenerateJson = () => {
     };
 
     // 전처리값을 숫자로 변환
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const parsedPreprocessing: Record<string, any> = {};
-    Object.entries(preprocessing).forEach(([method, params]) => {
-      parsedPreprocessing[method] = {};
-      Object.entries(params).forEach(([k, v]) => {
+    const parsedPreprocessing = preprocessing.map((block) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const parsed: Record<string, any> = { type: block.type };
+      Object.entries(block).forEach(([key, val]) => {
+        if (key === "type") return;
         try {
-          parsedPreprocessing[method][k] = JSON.parse(v);
+          parsed[key] = JSON.parse(val!);
         } catch {
-          parsedPreprocessing[method][k] = v;
+          parsed[key] = val;
         }
       });
+      return parsed;
     });
 
     // layers 변환 (uuid 제외)
