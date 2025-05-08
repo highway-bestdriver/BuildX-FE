@@ -7,6 +7,7 @@ import { useGenerateJson } from "src/hooks/useGenerateJson";
 
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { token } from "@api/token";
 
 const Step4 = () => {
   const { modelName, datasetName, layers, setHyperparameters } =
@@ -44,12 +45,78 @@ const Step4 = () => {
     }
   };
 
+  // const handleTrainCode = () => {
+  //   setIsTraining(true);
+  //   setTimeout(() => {
+  //     setIsTraining(false);
+  //     alert("훈련이 완료되었습니다.");
+  //   }, 5000);
+  // };
+
   const handleTrainCode = () => {
-    setIsTraining(true);
-    setTimeout(() => {
-      setIsTraining(false);
-      alert("훈련이 완료되었습니다.");
-    }, 5000);
+    if (!generatedCode) {
+      alert("먼저 코드 생성을 완료해주세요.");
+      return;
+    }
+    const accessToken = token.sync() || "";
+    console.log("WebSocket 연결 시도...");
+    console.log("accessToken: " + accessToken);
+
+    // WebSocket 연결 설정
+    try {
+      const socket = new WebSocket(
+        `wss://buildlab.shop/ws/train?token=${accessToken}`
+      );
+
+      // 연결 성공 이벤트 핸들러
+      socket.onopen = () => {
+        console.log("WebSocket 연결 성공");
+
+        const parsedHyper = {
+          epochs: Number(epoch),
+          batch_size: Number(batchSize),
+          learning_rate: Number(learningRate),
+        };
+
+        const body = {
+          model_name: modelName,
+          dataset: datasetName,
+          form: parsedHyper,
+          code: generatedCode,
+        };
+
+        console.log("WebSocket 전송 body:", body);
+        socket.send(JSON.stringify(body));
+        console.log("send() 완료");
+      };
+
+      // 메시지 수신 이벤트 핸들러
+      socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+
+        if (data.type === "log") {
+          console.log("type: ", data.type);
+          console.log(data.message);
+        } else if (data.status) {
+          console.log("상태:", data.status);
+        } else if (data.error) {
+          console.error("에러:", data.error);
+        }
+      };
+
+      // 연결 종료 이벤트 핸들러
+      socket.onclose = (event) => {
+        console.warn("WebSocket 연결 종료됨:", event.code, event.reason);
+      };
+
+      // 에러 처리 이벤트 핸들러
+      socket.onerror = (event) => {
+        console.error("WebSocket 오류 발생:", event);
+      };
+    } catch (err) {
+      console.error("WebSocket 생성 중 예외 발생:", err);
+      alert("웹소켓 연결을 시도하는 중 오류가 발생했습니다.");
+    }
   };
 
   return (

@@ -69,15 +69,18 @@ const Step2 = () => {
             <div key={method} className="bg-white border rounded-xl px-6 py-4">
               <h4 className="text-lg suit_16_B mb-3">{method} 설정</h4>
               <div className="flex flex-col gap-2">
-                {preprocessingData[method].map(({ name, placeholder }) => (
-                  <SettingInput
-                    key={name}
-                    label={name}
-                    placeholder={placeholder}
-                    value={inputs[method]?.[name] || ""}
-                    onChange={(val) => handleInputChange(method, name, val)}
-                  />
-                ))}
+                {preprocessingData[method].map(
+                  ({ name, placeholder, required }) => (
+                    <SettingInput
+                      key={name}
+                      label={name}
+                      placeholder={placeholder}
+                      value={inputs[method]?.[name] || ""}
+                      required={required}
+                      onChange={(val) => handleInputChange(method, name, val)}
+                    />
+                  )
+                )}
               </div>
             </div>
           ))}

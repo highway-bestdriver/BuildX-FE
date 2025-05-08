@@ -79,8 +79,8 @@ const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
       {/* 고정 필드 */}
       <div className="flex flex-col gap-2 mb-4">
         <SettingInput
-          label="ID :"
-          placeholder="고유한 ID를 입력하세요"
+          label="Name :"
+          placeholder="고유한 블록명을 입력하세요"
           value={inputs["id"] || ""}
           onChange={(val) => handleChange("id", val)}
           isDefault={true}
@@ -107,13 +107,14 @@ const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
       {/* 동적 필드 */}
       {paramList.length > 0 ? (
         <div className="flex flex-col gap-2">
-          {paramList.map(({ name, placeholder }) => (
+          {paramList.map(({ name, placeholder, required }) => (
             <div key={name} className="flex flex-col">
               <SettingInput
                 key={name}
                 label={name}
                 placeholder={placeholder}
                 value={inputs[name] || ""}
+                required={required}
                 onChange={(val) => handleChange(name, val)}
               />
             </div>
