@@ -4,29 +4,40 @@ import { useState } from "react";
 import { useModelStore } from "@store/useModelStore";
 import { modelApi } from "@api/client/model";
 import { useGenerateJson } from "src/hooks/useGenerateJson";
-
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { token } from "@api/token";
+
+import LoadingSpinner from "./_components/(train)/LoadingSpinner";
+import CodeViewer from "./_components/(train)/CodeViewer";
+import HyperparamForm from "./_components/(train)/HyperparamForm";
+import TrainingGraph from "./_components/(train)/TrainingGraph";
 
 const Step4 = () => {
   const { modelName, datasetName, layers, setHyperparameters } =
     useModelStore();
   const { getRequestBody } = useGenerateJson();
 
-  const [epoch, setEpoch] = useState("");
-  const [batchSize, setBatchSize] = useState("");
-  const [learningRate, setLearningRate] = useState("");
+  const [hyperParams, setHyperParams] = useState({
+    epoch: "",
+    batchSize: "",
+    learningRate: "",
+  });
+
+  const handleChange = (key: keyof typeof hyperParams, value: string) => {
+    setHyperParams((prev) => ({ ...prev, [key]: value }));
+  };
 
   const [generatedCode, setGeneratedCode] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [isTraining, setIsTraining] = useState(false);
+  const [trainingLogs, setTrainingLogs] = useState<
+    { epoch: number; loss: number; acc: number }[]
+  >([]);
 
   const handleComplete = () => {
     setHyperparameters({
-      epochs: epoch,
-      batch_size: batchSize,
-      learning_rate: learningRate,
+      epochs: hyperParams.epoch,
+      batch_size: hyperParams.batchSize,
+      learning_rate: hyperParams.learningRate,
     });
   };
 
@@ -44,14 +55,6 @@ const Step4 = () => {
       setIsGenerating(false);
     }
   };
-
-  // const handleTrainCode = () => {
-  //   setIsTraining(true);
-  //   setTimeout(() => {
-  //     setIsTraining(false);
-  //     alert("훈련이 완료되었습니다.");
-  //   }, 5000);
-  // };
 
   const handleTrainCode = () => {
     if (!generatedCode) {
@@ -71,11 +74,12 @@ const Step4 = () => {
       // 연결 성공 이벤트 핸들러
       socket.onopen = () => {
         console.log("WebSocket 연결 성공");
+        setIsTraining(true);
 
         const parsedHyper = {
-          epochs: Number(epoch),
-          batch_size: Number(batchSize),
-          learning_rate: Number(learningRate),
+          epochs: Number(hyperParams.epoch),
+          batch_size: Number(hyperParams.batchSize),
+          learning_rate: Number(hyperParams.learningRate),
         };
 
         const body = {
@@ -94,13 +98,27 @@ const Step4 = () => {
       socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
 
-        if (data.type === "log") {
-          console.log("type: ", data.type);
-          console.log(data.message);
-        } else if (data.status) {
-          console.log("상태:", data.status);
-        } else if (data.error) {
-          console.error("에러:", data.error);
+        if (data.type === "log" && typeof data.message === "string") {
+          const match = data.message.match(
+            /epoch (\d+) \| loss ([\d.]+) \| acc ([\d.]+)/
+          );
+          if (match) {
+            const [, epochStr, lossStr, accStr] = match;
+            setTrainingLogs((prev) => [
+              ...prev,
+              {
+                epoch: parseInt(epochStr, 10),
+                loss: parseFloat(lossStr),
+                acc: parseFloat(accStr),
+              },
+            ]);
+            console.log(data.message);
+          }
+
+          if (data.message === "모델 실행 완료") {
+            //setIsTraining(false);
+            console.log("모델 실행 완료");
+          }
         }
       };
 
@@ -121,6 +139,7 @@ const Step4 = () => {
 
   return (
     <div className="flex flex-col w-full items-center px-4 py-6 mt-12">
+      {/* 구조 확인 및 하이퍼파라미터 설정 */}
       <article className="flex w-[90%] flex-row justify-between">
         <div className="p-4 text-gray-600 suit_16_M flex flex-col gap-4">
           <p>- 데이터셋: {datasetName}</p>
@@ -128,49 +147,17 @@ const Step4 = () => {
           <p>- 레이어 수: {layers.length}</p>
         </div>
 
-        <div className="suit_16_M flex flex-col bg-white p-4 rounded-xl gap-4">
-          <div className="suit_16_B text-lg">고급</div>
-          <span className="flex flex-row justify-between items-center gap-2">
-            <span>에포크: </span>
-            <input
-              className="flex-1 suit_16_R border-0 border-b border-main_black pb-1"
-              value={epoch}
-              onChange={(e) => setEpoch(e.target.value)}
-            />
-          </span>
-          <span className="flex flex-row justify-between items-center gap-2">
-            <span>배치 크기: </span>
-            <input
-              className="flex-1 suit_16_R border-0 border-b border-main_black pb-1"
-              value={batchSize}
-              onChange={(e) => setBatchSize(e.target.value)}
-            />
-          </span>
-          <span className="flex flex-row justify-between items-center gap-2">
-            <span>학습률: </span>
-            <input
-              className="flex-1 suit_16_R border-0 border-b border-main_black pb-1"
-              value={learningRate}
-              onChange={(e) => setLearningRate(e.target.value)}
-            />
-          </span>
-          <div className="flex justify-center mt-6">
-            <span
-              onClick={handleComplete}
-              className="px-4 py-2 text-lg suit_16_SB bg-gray-400 text-white rounded-lg hover:bg-gray-500 cursor-pointer"
-            >
-              Complete
-            </span>
-          </div>
-        </div>
+        <HyperparamForm
+          values={hyperParams}
+          onChange={handleChange}
+          onComplete={handleComplete}
+        />
       </article>
 
+      {/* 코드 생성 */}
       <div className="mt-8 flex flex-row w-full gap-6 items-center justify-center">
         {isGenerating ? (
-          <div className="flex flex-col items-center text-main_black">
-            <div className="w-8 h-8 border-4 border-main_orange border-t-transparent rounded-full animate-spin" />
-            <div className="suit_16_SB mt-2">코드 생성 중입니다...</div>
-          </div>
+          <LoadingSpinner message="코드 생성 중입니다..." />
         ) : (
           <div
             onClick={handleGenerateCode}
@@ -181,25 +168,15 @@ const Step4 = () => {
         )}
       </div>
 
+      {/* 코드 훈련 */}
       {generatedCode && (
         <>
-          <div className="flex flex-col mt-10 w-full bg-[#1e1e1e] text-white p-4 rounded-md shadow-md">
-            <h3 className="text-lg suit_16_SB mb-3 text-main_orange">
-              ㅣ 생성된 코드
-            </h3>
-            <pre className="text-sm whitespace-pre-wrap font-mono text-[#dcdcdc] leading-relaxed">
-              <SyntaxHighlighter language="python" style={vscDarkPlus}>
-                {generatedCode}
-              </SyntaxHighlighter>
-            </pre>
-          </div>
+          <CodeViewer code={generatedCode} />
 
-          <div className="mt-8">
+          <div className="w-full mt-8">
             {isTraining ? (
-              <div className="flex flex-col items-center gap-2 text-main_black">
-                <div className="w-8 h-8 border-4 border-orange-300 border-t-transparent rounded-full animate-spin" />
-                <div className="suit_16_SB mt-2">코드 훈련 중입니다...</div>
-              </div>
+              // <LoadingSpinner message="코드 훈련 중입니다..." />
+              <TrainingGraph data={trainingLogs} />
             ) : (
               <div
                 onClick={handleTrainCode}

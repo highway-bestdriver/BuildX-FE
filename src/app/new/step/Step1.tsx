@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Class from "./_components/Class";
+import Class from "./_components/(dataset)/Class";
 import { tfDatasetList } from "@constants/tfDatasetList";
 import { IcBluePlus, IcTensorflow, ImgStep1 } from "@assets/icons";
 import { useModelStore } from "@store/useModelStore";
