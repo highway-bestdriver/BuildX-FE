@@ -4,6 +4,7 @@ import { useState } from "react";
 import SettingInput from "./_components/(block)/SettingInput";
 import { preprocessingData } from "@constants/preprocessingData";
 import { PreprocessingBlock, useModelStore } from "@store/useModelStore";
+import { useValidateType } from "src/hooks/useValidateType";
 
 const Step2 = () => {
   const [selected, setSelected] = useState<string[]>([]);
@@ -31,6 +32,25 @@ const Step2 = () => {
   };
 
   const handleComplete = () => {
+    for (const method of selected) {
+      const paramDefs = preprocessingData[method];
+      for (const { name, required, type } of paramDefs) {
+        const val = inputs[method]?.[name];
+
+        if (required && (!val || val.trim() === "")) {
+          alert(`'${method}' 항목의 필수 입력 '${name}' 값이 누락되었습니다.`);
+          return;
+        }
+
+        if (val && type && !useValidateType(val, type)) {
+          alert(
+            `'${method}' 항목의 '${name}' 값이 형식에 맞지 않습니다. (${type})`
+          );
+          return;
+        }
+      }
+    }
+
     const formatted = selected.map((method) => {
       const entry: PreprocessingBlock = {
         type: method,

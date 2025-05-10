@@ -32,7 +32,10 @@ export type ParamType =
   | "List[float]"
   | "Union[int, List[int]]"
   | "Union[float, List[float]]"
-  | "Union[int, str]";
+  | "Union[int, str]"
+  | "Union[int, float, List[int], List[float], None, Dict]"
+  | "Literal['constant', 'edge', 'reflect', 'symmetric']"
+  | "Literal['nearest', 'linear', 'bilinear', 'bicubic', 'trilinear', 'area']";
 
 export type HyperParameter = {
   name: string;
@@ -230,7 +233,7 @@ export const hyperParameterMap: Record<string, HyperParameter[]> = {
       name: "mode",
       placeholder: "업샘플링 방식 ex. nearest, bilinear",
       required: true,
-      type: "str",
+      type: "Literal['nearest', 'linear', 'bilinear', 'bicubic', 'trilinear', 'area']",
     },
     {
       name: "align_corners",
