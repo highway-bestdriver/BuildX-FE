@@ -21,6 +21,7 @@ export const blockData = [
   { label: "Softmax", color: "bg-orange-400" },
   { label: "Identity", color: "bg-yellow-300" },
   { label: "ConvTranspose2d", color: "bg-yellow-300" },
+  { label: "Sequential", color: "bg-gray-300" },
 ];
 
 export type ParamType =
@@ -308,6 +309,13 @@ export const hyperParameterMap: Record<string, HyperParameter[]> = {
       name: "dilation",
       placeholder: "커널 요소 간 간격",
       type: "Union[int, List[int]]",
+    },
+  ],
+  Sequential: [
+    {
+      name: "layers",
+      placeholder: "커스텀 블럭입니다. 포함할 레이어 ID를 배열로 작성해주세요.",
+      required: true,
     },
   ],
 };

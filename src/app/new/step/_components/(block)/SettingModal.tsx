@@ -46,6 +46,24 @@ const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
   };
 
   const handleSave = () => {
+    const { id, input, ...params } = inputs;
+
+    // 고유 이름 누락 검사
+    if (!id || id.trim() === "") {
+      alert("블록 이름은 필수 입력 항목입니다.");
+      return;
+    }
+
+    // 중복된 ID 검사 (현재 블록 제외)
+    const isDuplicated = layers.some(
+      (layer) => layer.uuid !== blockUUID && layer.id === id
+    );
+    if (isDuplicated) {
+      alert(`'${id}'는 이미 사용 중인 이름입니다. 다른 이름을 입력해주세요.`);
+      return;
+    }
+
+    // 필수 항목 및 타입 유효성 검사
     for (const param of paramList) {
       const { name, required, type } = param;
       const value = inputs[name];
@@ -61,7 +79,7 @@ const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
       }
     }
 
-    const { id, input, ...params } = inputs;
+    // 저장 및 연결 갱신
     const flattenedLayer = {
       uuid: blockUUID,
       id,
@@ -69,8 +87,8 @@ const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
       type: label,
       ...params,
     };
-    updateLayer(flattenedLayer);
 
+    updateLayer(flattenedLayer);
     removeConnection(blockUUID);
     if (input && input !== "x") {
       addConnection(input, blockUUID);
