@@ -83,12 +83,14 @@ const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
     const flattenedLayer = {
       uuid: blockUUID,
       id,
-      input,
+      //input,
       type: label,
       ...params,
+      ...(label !== "Sequential" && { input }),
     };
 
     updateLayer(flattenedLayer);
+
     removeConnection(blockUUID);
     if (input && input !== "x") {
       addConnection(input, blockUUID);
@@ -120,22 +122,24 @@ const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
           isDefault={true}
         />
 
-        <div className="flex flex-col">
-          <label className="text-sm text-gray-700 mb-1 suit_16_SB">
-            Input :
-          </label>
-          <select
-            className="border rounded px-2 py-1 text-sm suit_16_R"
-            value={inputs["input"] || "x"}
-            onChange={(e) => handleChange("input", e.target.value)}
-          >
-            {inputOptions.map((option) => (
-              <option key={option} value={option}>
-                {option === "x" ? "x (초기 입력)" : option}
-              </option>
-            ))}
-          </select>
-        </div>
+        {label !== "Sequential" && (
+          <div className="flex flex-col">
+            <label className="text-sm text-gray-700 mb-1 suit_16_SB">
+              Input :
+            </label>
+            <select
+              className="border rounded px-2 py-1 text-sm suit_16_R"
+              value={inputs["input"] || "x"}
+              onChange={(e) => handleChange("input", e.target.value)}
+            >
+              {inputOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option === "x" ? "x (초기 입력)" : option}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
       {/* 동적 필드 */}

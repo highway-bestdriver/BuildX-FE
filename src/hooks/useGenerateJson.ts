@@ -33,8 +33,13 @@ export const useGenerateJson = () => {
       const parsed: Record<string, any> = {};
 
       Object.entries(layer).forEach(([key, val]) => {
-        if (["uuid", "id", "type", "input"].includes(key)) {
-          parsed[key] = val; // 문자열로 유지
+        if (["uuid", "id", "type"].includes(key)) {
+          parsed[key] = val;
+        } else if (key === "input" && layer.type === "Sequential") {
+          // Skip input for Sequential
+          return;
+        } else if (key === "input") {
+          parsed[key] = val;
         } else {
           try {
             parsed[key] = JSON.parse(val!);
