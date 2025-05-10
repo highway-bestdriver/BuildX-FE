@@ -8,14 +8,40 @@ import {
   PolarRadiusAxis,
   ResponsiveContainer,
 } from "recharts";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useResultStore } from "@store/useResultStore";
+import { useGenerateJson } from "src/hooks/useGenerateJson";
+import { modelApi } from "@api/client/model";
 
 const Step5 = () => {
   const metrics = useResultStore((s) => s.trainingMetrics);
-  const [rdFeedback, setRdFeedback] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (!metrics) {
+  const { getFeedbackRequestBody } = useGenerateJson();
+
+  // GPT 피드백 반환
+  useEffect(() => {
+    const fetchFeedback = async () => {
+      try {
+        const body = getFeedbackRequestBody();
+        console.log("body:" + JSON.stringify(body, null, 2));
+        const res = await modelApi.feedbackCode(body);
+        setFeedback(res.feedback);
+      } catch (error) {
+        console.error("피드백 요청 실패:", error);
+        setFeedback("피드백 요청 중 오류가 발생했습니다.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (metrics) {
+      fetchFeedback();
+    }
+  }, [metrics]);
+
+  if (!metrics || isLoading) {
     return (
       <div className="absolute inset-0 z-50 flex items-center justify-center">
         <div className="flex gap-2">
@@ -27,6 +53,7 @@ const Step5 = () => {
     );
   }
 
+  // 지표 데이터
   const minLoss = 0.2;
   const maxLoss = 3.0;
 
@@ -96,7 +123,7 @@ const Step5 = () => {
           # 종합 분석 평가
         </h3>
         <div className="text-gray-700 text-sm whitespace-pre-wrap leading-relaxed">
-          {rdFeedback}
+          {feedback}
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@ export type TrainingMetrics = {
   train_acc: number;
   train_loss: number;
   test_acc: number;
+  test_loss: number;
   test_precision: number;
   test_recall: number;
   test_f1: number;

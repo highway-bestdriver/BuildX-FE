@@ -11,6 +11,7 @@ import CodeViewer from "./_components/(train)/CodeViewer";
 import HyperparamForm from "./_components/(train)/HyperparamForm";
 import TrainingGraph from "./_components/(train)/TrainingGraph";
 import { useResultStore } from "@store/useResultStore";
+import EpochProgressBar from "./_components/(train)/EpochProgressBar";
 
 const Step4 = () => {
   const { modelName, datasetName, layers, setHyperparameters } =
@@ -24,6 +25,8 @@ const Step4 = () => {
     batchSize: "",
     learningRate: "",
   });
+
+  const [currentEpoch, setCurrentEpoch] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
 
   const handleChange = (key: keyof typeof hyperParams, value: string) => {
@@ -123,14 +126,16 @@ const Step4 = () => {
           );
           if (match) {
             const [, epochStr, lossStr, accStr] = match;
+            const epoch = parseInt(epochStr, 10);
             setTrainingLogs((prev) => [
               ...prev,
               {
-                epoch: parseInt(epochStr, 10),
+                epoch,
                 loss: parseFloat(lossStr),
                 acc: parseFloat(accStr),
               },
             ]);
+            setCurrentEpoch(epoch);
           }
 
           if (data.message === "모델 실행 완료") {
@@ -193,7 +198,10 @@ const Step4 = () => {
 
           <div className="w-full flex items-center justify-center mt-8">
             {isTraining ? (
-              <TrainingGraph data={trainingLogs} />
+              <div className="w-full">
+                <EpochProgressBar resetTrigger={currentEpoch} />
+                <TrainingGraph data={trainingLogs} />
+              </div>
             ) : (
               <div
                 onClick={handleTrainCode}

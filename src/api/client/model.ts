@@ -12,8 +12,12 @@ export const modelApi = {
   },
 
   // 코드 피드백
-  // feedbackCode: async (body: any) => {
-  //   const response = await privateApi.post<{}>(`/code/feedback`, body);
-  //   return response;
-  // },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  feedbackCode: async (body: any) => {
+    const response = await privateApi.post<{ feedback: string }>(
+      `/code/feedback`,
+      body
+    );
+    return response;
+  },
 };
