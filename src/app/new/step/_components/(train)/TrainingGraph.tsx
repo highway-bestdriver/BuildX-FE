@@ -58,6 +58,15 @@ const CustomTooltip = ({
 };
 
 const TrainingGraph: React.FC<TrainingGraphProps> = ({ data }) => {
+  const firstLoss = data[0]?.loss ?? 0;
+  const firstAcc = data[0]?.acc ?? 0;
+
+  // 손실: ±30%
+  const lossDomain = [Math.max(0, firstLoss * 0.8), firstLoss * 1.1];
+
+  // 정확도: ±10%
+  const accDomain = [Math.max(0, firstAcc * 0.9), Math.min(1, firstAcc * 1.1)];
+
   return (
     <div className="w-full h-[400px] bg-white shadow rounded-xl p-4">
       <h3 className="suit_16_B text-lg text-main_black mb-4">ㅣ 훈련 그래프</h3>
@@ -79,7 +88,8 @@ const TrainingGraph: React.FC<TrainingGraphProps> = ({ data }) => {
             tick={{ fontSize: 12 }}
             orientation="left"
             stroke="#f90808"
-            domain={[1.5, "auto"]}
+            domain={lossDomain}
+            tickFormatter={(value) => value.toFixed(4)}
             label={{
               value: "손실 (loss)",
               angle: -90,
@@ -94,7 +104,8 @@ const TrainingGraph: React.FC<TrainingGraphProps> = ({ data }) => {
             yAxisId="acc"
             tick={{ fontSize: 12 }}
             orientation="right"
-            domain={[0, 1]}
+            domain={accDomain}
+            tickFormatter={(value) => value.toFixed(4)}
             stroke="#0a6037"
             label={{
               value: "정확도 (accuracy)",

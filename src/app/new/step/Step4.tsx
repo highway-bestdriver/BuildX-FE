@@ -102,6 +102,7 @@ const Step4 = () => {
         const data = JSON.parse(event.data);
 
         if (data.type === "log" && typeof data.message === "string") {
+          console.log(data.message);
           const match = data.message.match(
             /epoch (\d+) \| loss ([\d.]+) \| acc ([\d.]+)/
           );
@@ -115,11 +116,9 @@ const Step4 = () => {
                 acc: parseFloat(accStr),
               },
             ]);
-            console.log(data.message);
           }
 
           if (data.message === "모델 실행 완료") {
-            //setIsTraining(false);
             console.log("모델 실행 완료");
           }
         }
