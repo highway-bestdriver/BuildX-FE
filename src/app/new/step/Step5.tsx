@@ -89,7 +89,7 @@ const Step5 = () => {
                 dataKey="metric"
                 tick={{ fontSize: 14, fill: "#555" }}
               />
-              <PolarRadiusAxis angle={30} domain={[0, 1]} />
+              <PolarRadiusAxis angle={38.6} domain={[0, 1]} />
               <Radar
                 name="모델 성능"
                 dataKey="value"
