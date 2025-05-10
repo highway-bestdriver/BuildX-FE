@@ -21,9 +21,11 @@ const Step4 = () => {
     batchSize: "",
     learningRate: "",
   });
+  const [isCompleted, setIsCompleted] = useState(false);
 
   const handleChange = (key: keyof typeof hyperParams, value: string) => {
     setHyperParams((prev) => ({ ...prev, [key]: value }));
+    setIsCompleted(false);
   };
 
   const [generatedCode, setGeneratedCode] = useState("");
@@ -39,6 +41,7 @@ const Step4 = () => {
       batch_size: hyperParams.batchSize,
       learning_rate: hyperParams.learningRate,
     });
+    setIsCompleted(true);
   };
 
   const handleGenerateCode = async () => {
@@ -151,6 +154,7 @@ const Step4 = () => {
           values={hyperParams}
           onChange={handleChange}
           onComplete={handleComplete}
+          isCompleted={isCompleted}
         />
       </article>
 

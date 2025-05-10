@@ -11,6 +11,7 @@ const Step2 = () => {
   const [inputs, setInputs] = useState<Record<string, Record<string, string>>>(
     {}
   );
+  const [isCompleted, setIsCompleted] = useState(false);
   const setPreprocessing = useModelStore((store) => store.setPreprocessing);
 
   const toggleSelection = (method: string) => {
@@ -19,6 +20,7 @@ const Step2 = () => {
         ? prev.filter((m) => m !== method)
         : [...prev, method]
     );
+    setIsCompleted(false);
   };
 
   const handleInputChange = (method: string, key: string, value: string) => {
@@ -29,6 +31,7 @@ const Step2 = () => {
         [key]: value,
       },
     }));
+    setIsCompleted(false);
   };
 
   const handleComplete = () => {
@@ -60,6 +63,7 @@ const Step2 = () => {
     });
     setPreprocessing(formatted);
     console.log("전역 상태 저장 완료:", formatted);
+    setIsCompleted(true);
   };
 
   return (
@@ -108,13 +112,18 @@ const Step2 = () => {
             </div>
           ))}
 
-          <div className="flex justify-center mt-6">
-            <span
+          <div className="flex flex-col items-center justify-center mt-6">
+            <div
               onClick={handleComplete}
-              className="px-4 py-2 text-lg suit_16_SB bg-main_orange text-white rounded-lg hover:bg-orange-400 cursor-pointer"
+              className="w-[110px] px-4 py-2 text-lg suit_16_SB bg-main_orange text-white rounded-lg hover:bg-orange-400 cursor-pointer"
             >
               Complete
-            </span>
+            </div>
+            {isCompleted && (
+              <p className="pt-4 text-gray-600 suit_16_SB text-sm text-center">
+                전처리 설정 완료! 다음 단계로 넘어가보아요.
+              </p>
+            )}
           </div>
         </div>
       )}

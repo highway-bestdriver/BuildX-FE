@@ -17,11 +17,11 @@ const LoginPage = () => {
   const handleLogin = async () => {
     try {
       const response = await authApi.postLogin(username, password);
-      //token.set(response.access_token, "accessToken");
-      //token.set(response.refresh_token, "refreshToken");
+      token.set(response.access_token, "accessToken");
+      token.set(response.refresh_token, "refreshToken");
 
-      document.cookie = `accessToken=${response.access_token}; path=/; max-age=1200`;
-      document.cookie = `refreshToken=${response.refresh_token}; path=/; max-age=604800`; // 7일
+      //document.cookie = `accessToken=${response.access_token}; path=/; max-age=1200`;
+      //document.cookie = `refreshToken=${response.refresh_token}; path=/; max-age=604800`; // 7일
 
       router.push("/");
       router.refresh();
