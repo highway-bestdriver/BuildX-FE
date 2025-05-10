@@ -10,10 +10,13 @@ import LoadingSpinner from "./_components/(train)/LoadingSpinner";
 import CodeViewer from "./_components/(train)/CodeViewer";
 import HyperparamForm from "./_components/(train)/HyperparamForm";
 import TrainingGraph from "./_components/(train)/TrainingGraph";
+import { useResultStore } from "@store/useResultStore";
 
 const Step4 = () => {
   const { modelName, datasetName, layers, setHyperparameters } =
     useModelStore();
+  const setTrainingMetrics = useResultStore((s) => s.setTrainingMetrics);
+
   const { getRequestBody } = useGenerateJson();
 
   const [hyperParams, setHyperParams] = useState({
@@ -51,6 +54,7 @@ const Step4 = () => {
       console.log("body:" + JSON.stringify(body, null, 2));
       const res = await modelApi.generateCode(body);
       setGeneratedCode(res.code);
+      setIsTraining(false);
     } catch (error) {
       console.error("코드 생성 실패: ", error);
       alert("코드 생성에 실패했습니다.");
@@ -103,6 +107,17 @@ const Step4 = () => {
 
         if (data.type === "log" && typeof data.message === "string") {
           console.log(data.message);
+          try {
+            const parsedMessage = JSON.parse(data.message);
+
+            if (parsedMessage.type === "metric") {
+              setTrainingMetrics(parsedMessage);
+              console.log("setTrainingMetrics 완료");
+            }
+          } catch (err) {
+            // JSON 파싱 실패 시 무시
+          }
+
           const match = data.message.match(
             /epoch (\d+) \| loss ([\d.]+) \| acc ([\d.]+)/
           );
@@ -176,9 +191,8 @@ const Step4 = () => {
         <>
           <CodeViewer code={generatedCode} />
 
-          <div className="w-full mt-8">
+          <div className="w-full flex items-center justify-center mt-8">
             {isTraining ? (
-              // <LoadingSpinner message="코드 훈련 중입니다..." />
               <TrainingGraph data={trainingLogs} />
             ) : (
               <div

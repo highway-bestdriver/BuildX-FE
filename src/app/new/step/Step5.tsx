@@ -8,31 +8,12 @@ import {
   PolarRadiusAxis,
   ResponsiveContainer,
 } from "recharts";
-import { useEffect, useState } from "react";
-import { metricsList, feedbackList } from "@constants/resultData";
+import { useState } from "react";
+import { useResultStore } from "@store/useResultStore";
 
 const Step5 = () => {
-  const [metrics, setMetrics] = useState<null | {
-    accuracy: number;
-    precision: number;
-    recall: number;
-    f1_score: number;
-    auc_roc: number;
-    loss: number;
-  }>(null);
-
+  const metrics = useResultStore((s) => s.trainingMetrics);
   const [rdFeedback, setRdFeedback] = useState("");
-
-  // 클라이언트에서만 실행
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const metricIdx = Math.floor(Math.random() * metricsList.length);
-      setMetrics(metricsList[metricIdx]);
-
-      const idx = Math.floor(Math.random() * feedbackList.length);
-      setRdFeedback(feedbackList[idx]);
-    }
-  }, []);
 
   if (!metrics) {
     return (
@@ -47,18 +28,18 @@ const Step5 = () => {
   }
 
   const minLoss = 0.2;
-  const maxLoss = 1.5;
+  const maxLoss = 3.0;
 
   const data = [
-    { metric: "정확도", value: metrics.accuracy },
-    { metric: "정밀도", value: metrics.precision },
-    { metric: "재현율", value: metrics.recall },
-    { metric: "f1-score", value: metrics.f1_score },
-    { metric: "AUC-ROC", value: metrics.auc_roc },
+    { metric: "train_acc", value: metrics.train_acc },
     {
-      metric: "normalized loss",
-      value: 1 - (metrics.loss - minLoss) / (maxLoss - minLoss),
+      metric: "normalized train_loss",
+      value: 1 - (metrics.train_loss - minLoss) / (maxLoss - minLoss),
     },
+    { metric: "test_acc", value: metrics.test_acc },
+    { metric: "test_precision", value: metrics.test_precision },
+    { metric: "test_recall", value: metrics.test_recall },
+    { metric: "test_f1", value: metrics.test_f1 },
   ];
 
   return (
@@ -73,7 +54,10 @@ const Step5 = () => {
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
               <PolarGrid />
-              <PolarAngleAxis dataKey="metric" />
+              <PolarAngleAxis
+                dataKey="metric"
+                tick={{ fontSize: 14, fill: "#555" }}
+              />
               <PolarRadiusAxis angle={30} domain={[0, 1]} />
               <Radar
                 name="모델 성능"
@@ -81,7 +65,6 @@ const Step5 = () => {
                 stroke="#ff7300"
                 fill="#ff7300"
                 fillOpacity={0.6}
-                label={false}
               />
             </RadarChart>
           </ResponsiveContainer>
@@ -95,11 +78,11 @@ const Step5 = () => {
               className="flex justify-between border-b py-1 px-2"
             >
               <span className="font-medium">
-                {metric === "normalized loss" ? "loss" : metric}
+                {metric === "normalized train_loss" ? "loss" : metric}
               </span>
               <span>
-                {metric === "normalized loss"
-                  ? metrics.loss.toFixed(2)
+                {metric === "normalized train_loss"
+                  ? metrics.train_loss.toFixed(2)
                   : `${(value * 100).toFixed(2)}%`}
               </span>
             </div>
