@@ -1,8 +1,8 @@
 export const tfDatasetList = [
   "MNIST",
-  "CIFAR-10",
+  "CIFAR10",
   "Fashion MNIST",
-  "CIFAR-100",
+  "CIFAR100",
   "Cats vs Dogs",
   "IMDB Reviews",
   "Reuters",

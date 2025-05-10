@@ -3,13 +3,15 @@
 import { useState } from "react";
 import SettingInput from "./_components/(block)/SettingInput";
 import { preprocessingData } from "@constants/preprocessingData";
-import { useModelStore } from "@store/useModelStore";
+import { PreprocessingBlock, useModelStore } from "@store/useModelStore";
+import { validateType } from "src/hooks/useValidateType";
 
 const Step2 = () => {
   const [selected, setSelected] = useState<string[]>([]);
   const [inputs, setInputs] = useState<Record<string, Record<string, string>>>(
     {}
   );
+  const [isCompleted, setIsCompleted] = useState(false);
   const setPreprocessing = useModelStore((store) => store.setPreprocessing);
 
   const toggleSelection = (method: string) => {
@@ -18,6 +20,7 @@ const Step2 = () => {
         ? prev.filter((m) => m !== method)
         : [...prev, method]
     );
+    setIsCompleted(false);
   };
 
   const handleInputChange = (method: string, key: string, value: string) => {
@@ -28,15 +31,39 @@ const Step2 = () => {
         [key]: value,
       },
     }));
+    setIsCompleted(false);
   };
 
   const handleComplete = () => {
-    const filtered: Record<string, Record<string, string>> = {};
-    selected.forEach((method) => {
-      filtered[method] = inputs[method] || {};
+    for (const method of selected) {
+      const paramDefs = preprocessingData[method];
+      for (const { name, required, type } of paramDefs) {
+        const val = inputs[method]?.[name];
+
+        if (required && (!val || val.trim() === "")) {
+          alert(`'${method}' 항목의 필수 입력 '${name}' 값이 누락되었습니다.`);
+          return;
+        }
+
+        if (val && type && !validateType(val, type)) {
+          alert(
+            `'${method}' 항목의 '${name}' 값이 형식에 맞지 않습니다. (${type})`
+          );
+          return;
+        }
+      }
+    }
+
+    const formatted = selected.map((method) => {
+      const entry: PreprocessingBlock = {
+        type: method,
+        ...(inputs[method] || {}),
+      };
+      return entry;
     });
-    setPreprocessing(filtered);
-    console.log("전역 상태 저장 완료:", filtered);
+    setPreprocessing(formatted);
+    console.log("전역 상태 저장 완료:", formatted);
+    setIsCompleted(true);
   };
 
   return (
@@ -69,26 +96,34 @@ const Step2 = () => {
             <div key={method} className="bg-white border rounded-xl px-6 py-4">
               <h4 className="text-lg suit_16_B mb-3">{method} 설정</h4>
               <div className="flex flex-col gap-2">
-                {preprocessingData[method].map(({ name, placeholder }) => (
-                  <SettingInput
-                    key={name}
-                    label={name}
-                    placeholder={placeholder}
-                    value={inputs[method]?.[name] || ""}
-                    onChange={(val) => handleInputChange(method, name, val)}
-                  />
-                ))}
+                {preprocessingData[method].map(
+                  ({ name, placeholder, required }) => (
+                    <SettingInput
+                      key={name}
+                      label={name}
+                      placeholder={placeholder}
+                      value={inputs[method]?.[name] || ""}
+                      required={required}
+                      onChange={(val) => handleInputChange(method, name, val)}
+                    />
+                  )
+                )}
               </div>
             </div>
           ))}
 
-          <div className="flex justify-center mt-6">
-            <span
+          <div className="flex flex-col items-center justify-center mt-6">
+            <div
               onClick={handleComplete}
-              className="px-4 py-2 text-lg suit_16_SB bg-main_orange text-white rounded-lg hover:bg-orange-400 cursor-pointer"
+              className="w-[110px] px-4 py-2 text-lg suit_16_SB bg-main_orange text-white rounded-lg hover:bg-orange-400 cursor-pointer"
             >
               Complete
-            </span>
+            </div>
+            {isCompleted && (
+              <p className="pt-4 text-gray-600 suit_16_SB text-sm text-center">
+                전처리 설정 완료! 다음 단계로 넘어가보아요.
+              </p>
+            )}
           </div>
         </div>
       )}

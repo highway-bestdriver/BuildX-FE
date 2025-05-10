@@ -1,8 +1,10 @@
 import { useModelStore } from "@store/useModelStore";
+import { useResultStore } from "@store/useResultStore";
 
 export const useGenerateJson = () => {
   const { modelName, datasetName, layers, preprocessing, hyperparameters } =
     useModelStore();
+  const { trainingMetrics } = useResultStore();
 
   const getRequestBody = () => {
     // 하이퍼파라미터를 숫자로 변환
@@ -13,17 +15,18 @@ export const useGenerateJson = () => {
     };
 
     // 전처리값을 숫자로 변환
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const parsedPreprocessing: Record<string, any> = {};
-    Object.entries(preprocessing).forEach(([method, params]) => {
-      parsedPreprocessing[method] = {};
-      Object.entries(params).forEach(([k, v]) => {
+    const parsedPreprocessing = preprocessing.map((block) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const parsed: Record<string, any> = { type: block.type };
+      Object.entries(block).forEach(([key, val]) => {
+        if (key === "type") return;
         try {
-          parsedPreprocessing[method][k] = JSON.parse(v);
+          parsed[key] = JSON.parse(val!);
         } catch {
-          parsedPreprocessing[method][k] = v;
+          parsed[key] = val;
         }
       });
+      return parsed;
     });
 
     // layers 변환 (uuid 제외)
@@ -55,5 +58,24 @@ export const useGenerateJson = () => {
     };
   };
 
-  return { getRequestBody };
+  // 피드백 요청용 body 생성 함수
+  const getFeedbackRequestBody = () => {
+    const model = getRequestBody();
+
+    return {
+      model,
+      metrics: {
+        epoch: trainingMetrics?.epoch ?? 0,
+        train_acc: trainingMetrics?.train_acc ?? 0,
+        train_loss: trainingMetrics?.train_loss ?? 0,
+        test_acc: trainingMetrics?.test_acc ?? 0,
+        test_loss: trainingMetrics?.test_loss ?? 0,
+        test_precision: trainingMetrics?.test_precision ?? 0,
+        test_recall: trainingMetrics?.test_recall ?? 0,
+        test_f1: trainingMetrics?.test_f1 ?? 0,
+      },
+    };
+  };
+
+  return { getRequestBody, getFeedbackRequestBody };
 };

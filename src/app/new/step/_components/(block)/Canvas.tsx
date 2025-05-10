@@ -1,10 +1,10 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import CanvasBlock from "./(block)/CanvasBlock";
 import { BLOCK_HEIGHT, BLOCK_WIDTH } from "@constants/blockData";
 import { useModelStore } from "@store/useModelStore";
 import { useDrop } from "react-dnd";
+import CanvasBlock from "./CanvasBlock";
 
 interface BlockItem {
   id: string; // 내부 UUID

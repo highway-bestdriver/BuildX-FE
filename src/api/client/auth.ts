@@ -19,7 +19,10 @@ export const authApi = {
 
   // 로그인
   postLogin: async (username: string, password: string) => {
-    const response = publicApi.post<{ access_token: string }>(`/auth/login`, {
+    const response = publicApi.post<{
+      access_token: string;
+      refresh_token: string;
+    }>(`/auth/login`, {
       username: username,
       password: password,
     });

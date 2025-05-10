@@ -1,6 +1,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+// 전처리 블록
+export type PreprocessingBlock = {
+  type: string;
+  [key: string]: string | undefined;
+};
+
 // 레이어 블록
 export type LayerBlock = {
   uuid: string; // 드래그 관리용 내부 ID
@@ -20,7 +26,8 @@ export type Connection = {
 export interface ModelState {
   modelName: string;
   datasetName: string;
-  preprocessing: Record<string, Record<string, string>>;
+  // preprocessing: Record<string, Record<string, string>>;
+  preprocessing: PreprocessingBlock[];
   hyperparameters: {
     epochs: string;
     batch_size: string;
@@ -31,7 +38,7 @@ export interface ModelState {
 
   setModelName: (name: string) => void;
   setDatasetName: (name: string) => void;
-  setPreprocessing: (pre: Record<string, Record<string, string>>) => void;
+  setPreprocessing: (pre: PreprocessingBlock[]) => void;
   setHyperparameters: (params: ModelState["hyperparameters"]) => void;
 
   updateLayer: (layer: LayerBlock) => void;
@@ -47,7 +54,7 @@ export const useModelStore = create<ModelState>()(
     (set, get) => ({
       modelName: "",
       datasetName: "",
-      preprocessing: {},
+      preprocessing: [],
       hyperparameters: {
         epochs: "",
         batch_size: "",
