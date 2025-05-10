@@ -4,7 +4,7 @@ import { useState } from "react";
 import SettingInput from "./_components/(block)/SettingInput";
 import { preprocessingData } from "@constants/preprocessingData";
 import { PreprocessingBlock, useModelStore } from "@store/useModelStore";
-import { useValidateType } from "src/hooks/useValidateType";
+import { validateType } from "src/hooks/useValidateType";
 
 const Step2 = () => {
   const [selected, setSelected] = useState<string[]>([]);
@@ -45,7 +45,7 @@ const Step2 = () => {
           return;
         }
 
-        if (val && type && !useValidateType(val, type)) {
+        if (val && type && !validateType(val, type)) {
           alert(
             `'${method}' 항목의 '${name}' 값이 형식에 맞지 않습니다. (${type})`
           );

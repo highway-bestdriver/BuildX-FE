@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import SettingInput from "./SettingInput";
 import { hyperParameterMap } from "@constants/blockData";
 import { useModelStore } from "@store/useModelStore";
-import { useValidateType } from "src/hooks/useValidateType";
+import { validateType } from "src/hooks/useValidateType";
 
 interface SettingModalProps {
   label: string;
@@ -73,7 +73,7 @@ const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
         return;
       }
 
-      if (value && !useValidateType(value, type)) {
+      if (value && !validateType(value, type)) {
         alert(`"${name}" 입력값이 형식에 맞지 않습니다. (${type})`);
         return;
       }

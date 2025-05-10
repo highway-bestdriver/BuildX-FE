@@ -119,7 +119,7 @@ const Step4 = () => {
               console.log("setTrainingMetrics 완료");
             }
           } catch (err) {
-            // JSON 파싱 실패 시 무시
+            console.log(err);
           }
 
           const match = data.message.match(

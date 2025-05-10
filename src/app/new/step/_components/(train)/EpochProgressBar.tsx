@@ -29,7 +29,7 @@ const EpochProgressBar = ({
     }, interval);
 
     return () => clearInterval(id);
-  }, [resetTrigger, isDone]);
+  }, [resetTrigger, isDone, interval, totalSteps]);
 
   return (
     <div className="flex flex-col items-center mt-8 mb-10">

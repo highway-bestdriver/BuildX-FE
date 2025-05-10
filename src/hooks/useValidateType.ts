@@ -1,4 +1,4 @@
-export const useValidateType = (value: string, type?: string): boolean => {
+export const validateType = (value: string, type?: string): boolean => {
   if (!type) return true;
 
   try {
