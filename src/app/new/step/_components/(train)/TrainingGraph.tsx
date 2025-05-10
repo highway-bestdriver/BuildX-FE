@@ -126,7 +126,7 @@ const TrainingGraph: React.FC<TrainingGraphProps> = ({ data }) => {
 
           <Line
             yAxisId="acc"
-            type="monotone"
+            type="linear"
             dataKey="acc"
             name="정확도 (accuracy)"
             stroke="#0a6037"
@@ -138,7 +138,7 @@ const TrainingGraph: React.FC<TrainingGraphProps> = ({ data }) => {
           />
           <Line
             yAxisId="loss"
-            type="monotone"
+            type="linear"
             dataKey="loss"
             name="손실 (loss)"
             stroke="#f90808"

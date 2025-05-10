@@ -28,6 +28,7 @@ const Step4 = () => {
 
   const [currentEpoch, setCurrentEpoch] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [isTrainingDone, setIsTrainingDone] = useState(false);
 
   const handleChange = (key: keyof typeof hyperParams, value: string) => {
     setHyperParams((prev) => ({ ...prev, [key]: value }));
@@ -140,6 +141,7 @@ const Step4 = () => {
 
           if (data.message === "모델 실행 완료") {
             console.log("모델 실행 완료");
+            setIsTrainingDone(true);
           }
         }
       };
@@ -199,7 +201,10 @@ const Step4 = () => {
           <div className="w-full flex items-center justify-center mt-8">
             {isTraining ? (
               <div className="w-full">
-                <EpochProgressBar resetTrigger={currentEpoch} />
+                <EpochProgressBar
+                  resetTrigger={currentEpoch}
+                  isDone={isTrainingDone}
+                />
                 <TrainingGraph data={trainingLogs} />
               </div>
             ) : (

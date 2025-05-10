@@ -64,6 +64,10 @@ const Step5 = () => {
       value: 1 - (metrics.train_loss - minLoss) / (maxLoss - minLoss),
     },
     { metric: "test_acc", value: metrics.test_acc },
+    {
+      metric: "normalized test_loss",
+      value: 1 - (metrics.test_loss - minLoss) / (maxLoss - minLoss),
+    },
     { metric: "test_precision", value: metrics.test_precision },
     { metric: "test_recall", value: metrics.test_recall },
     { metric: "test_f1", value: metrics.test_f1 },
@@ -105,11 +109,17 @@ const Step5 = () => {
               className="flex justify-between border-b py-1 px-2"
             >
               <span className="font-medium">
-                {metric === "normalized train_loss" ? "loss" : metric}
+                {metric === "normalized train_loss"
+                  ? "train_loss"
+                  : metric === "normalized test_loss"
+                  ? "test_loss"
+                  : metric}
               </span>
               <span>
                 {metric === "normalized train_loss"
                   ? metrics.train_loss.toFixed(2)
+                  : metric === "normalized test_loss"
+                  ? metrics.test_loss.toFixed(2)
                   : `${(value * 100).toFixed(2)}%`}
               </span>
             </div>

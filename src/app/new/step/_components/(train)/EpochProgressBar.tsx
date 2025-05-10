@@ -5,12 +5,14 @@ interface EpochProgressBarProps {
   resetTrigger: number; // 리셋 조건
   totalSteps?: number; // 전체 블록 수
   interval?: number; // 간격(ms)
+  isDone?: boolean;
 }
 
 const EpochProgressBar = ({
   resetTrigger,
   totalSteps = 30,
   interval = 1000,
+  isDone = false,
 }: EpochProgressBarProps) => {
   const [filled, setFilled] = useState(0);
 
@@ -18,7 +20,7 @@ const EpochProgressBar = ({
     setFilled(0);
     const id = setInterval(() => {
       setFilled((prev) => {
-        if (prev >= totalSteps) {
+        if (prev >= totalSteps || isDone) {
           clearInterval(id);
           return totalSteps;
         }
@@ -27,7 +29,7 @@ const EpochProgressBar = ({
     }, interval);
 
     return () => clearInterval(id);
-  }, [resetTrigger]);
+  }, [resetTrigger, isDone]);
 
   return (
     <div className="flex flex-col items-center mt-8 mb-10">
