@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@assets/icons";
 import { token } from "@api/token";
@@ -17,13 +17,15 @@ export const Header = () => {
   const [isLogin, setIsLogin] = useState(false);
   const router = useRouter();
 
+  const pathname = usePathname();
+
   useEffect(() => {
     const checkLogin = async () => {
       const isLogin = await token.get();
       setIsLogin(!!isLogin);
     };
     checkLogin();
-  }, []);
+  }, [pathname]);
 
   const handleClick = () => {
     if (isLogin) {

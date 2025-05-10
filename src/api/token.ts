@@ -20,7 +20,7 @@ export const token = {
   // 클라이언트에서만 가능
   set: (value: string, name: string = "accessToken") => {
     if (typeof window === "undefined") return;
-    document.cookie = `${name}=${value}; path=/; max-age=18000`;
+    document.cookie = `${name}=${value}; path=/; max-age=1200`;
   },
 
   // 클라이언트에서만 가능

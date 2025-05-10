@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import SettingInput from "./SettingInput";
 import { hyperParameterMap } from "@constants/blockData";
 import { useModelStore } from "@store/useModelStore";
+import { useValidateType } from "src/hooks/useValidateType";
 
 interface SettingModalProps {
   label: string;
@@ -45,6 +46,21 @@ const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
   };
 
   const handleSave = () => {
+    for (const param of paramList) {
+      const { name, required, type } = param;
+      const value = inputs[name];
+
+      if (required && !value) {
+        alert(`"${name}"은 필수 항목입니다.`);
+        return;
+      }
+
+      if (value && !useValidateType(value, type)) {
+        alert(`"${name}" 입력값이 형식에 맞지 않습니다. (${type})`);
+        return;
+      }
+    }
+
     const { id, input, ...params } = inputs;
     const flattenedLayer = {
       uuid: blockUUID,
