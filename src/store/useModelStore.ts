@@ -13,7 +13,9 @@ export type LayerBlock = {
   id: string; // 사용자 입력 ID
   type: string;
   input?: string;
-  [key: string]: string | undefined;
+  x?: number;
+  y?: number;
+  //[key: string]: string | undefined;
 };
 
 // 블록 간 연결선
@@ -47,6 +49,8 @@ export interface ModelState {
 
   addConnection: (fromId: string, toId: string) => void;
   removeConnection: (toId: string) => void;
+
+  reset: () => void;
 }
 
 export const useModelStore = create<ModelState>()(
@@ -69,8 +73,12 @@ export const useModelStore = create<ModelState>()(
       setHyperparameters: (params) => set({ hyperparameters: params }),
       updateLayer: (newLayer) =>
         set((state) => {
+          const existing = state.layers.find((l) => l.uuid === newLayer.uuid);
           const filtered = state.layers.filter((l) => l.uuid !== newLayer.uuid);
-          return { layers: [...filtered, newLayer] };
+          //return { layers: [...filtered, newLayer] };
+          return {
+            layers: [...filtered, { ...existing, ...newLayer }],
+          };
         }),
 
       getLayerByUUID: (uuid) => {
@@ -90,6 +98,20 @@ export const useModelStore = create<ModelState>()(
         set((state) => ({
           connections: state.connections.filter((c) => c.toId !== toId),
         })),
+
+      reset: () =>
+        set({
+          modelName: "",
+          datasetName: "",
+          preprocessing: [],
+          hyperparameters: {
+            epochs: "",
+            batch_size: "",
+            learning_rate: "",
+          },
+          layers: [],
+          connections: [],
+        }),
     }),
     {
       name: "model-storage",

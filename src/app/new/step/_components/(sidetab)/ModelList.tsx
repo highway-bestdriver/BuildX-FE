@@ -1,11 +1,20 @@
 import Image from "next/image";
 import { modelData } from "@constants/modelData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useModelStore } from "@store/useModelStore";
 
 const ModelList = () => {
+  const { modelName, setModelName } = useModelStore();
   const [selectedModel, setSelectedModel] = useState(0);
-  const setModelName = useModelStore((state) => state.setModelName);
+  // const setModelName = useModelStore((state) => state.setModelName);
+
+  // 전역 상태로 초기화
+  useEffect(() => {
+    const matched = modelData.find((model) => model.name === modelName);
+    if (matched) {
+      setSelectedModel(matched.id);
+    }
+  }, [modelName]);
 
   const handleSelectModel = (id: number) => {
     setSelectedModel(id);

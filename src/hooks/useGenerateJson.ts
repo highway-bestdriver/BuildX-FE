@@ -35,11 +35,13 @@ export const useGenerateJson = () => {
       const parsed: Record<string, any> = {};
 
       Object.entries(layer).forEach(([key, val]) => {
-        if (["uuid", "id", "type", "input"].includes(key)) {
+        if (["uuid", "x", "y"].includes(key)) return;
+
+        if (["id", "type", "input"].includes(key)) {
           parsed[key] = val; // 문자열로 유지
         } else {
           try {
-            parsed[key] = JSON.parse(val!);
+            parsed[key] = typeof val === "string" ? JSON.parse(val) : val;
           } catch {
             parsed[key] = val;
           }

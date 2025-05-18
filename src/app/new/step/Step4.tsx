@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useModelStore } from "@store/useModelStore";
 import { modelApi } from "@api/client/model";
 import { useGenerateJson } from "src/hooks/useGenerateJson";
@@ -12,6 +12,7 @@ import HyperparamForm from "./_components/(train)/HyperparamForm";
 import TrainingGraph from "./_components/(train)/TrainingGraph";
 import { useResultStore } from "@store/useResultStore";
 import EpochProgressBar from "./_components/(train)/EpochProgressBar";
+import { ImgStep4 } from "@assets/icons";
 
 const Step4 = () => {
   const { modelName, datasetName, layers, setHyperparameters } =
@@ -51,13 +52,35 @@ const Step4 = () => {
     setIsCompleted(true);
   };
 
+  const [errorInfo, setErrorInfo] = useState<{
+    reason: string;
+    expected: string[];
+    actual: string[];
+  } | null>(null);
+
   const handleGenerateCode = async () => {
     setIsGenerating(true);
+    setErrorInfo(null);
+
     try {
       const body = getRequestBody();
       console.log("body:" + JSON.stringify(body, null, 2));
       const res = await modelApi.generateCode(body);
+
+      console.log("res: ", JSON.stringify(res, null, 2));
       setGeneratedCode(res.code);
+
+      if (res.error?.valid === false) {
+        console.log("reason:", res.error.reason);
+        console.log("expected:", res.error.expected);
+        console.log("actual:", res.error.actual);
+        setErrorInfo({
+          reason: res.error.reason!,
+          expected: res.error.expected!,
+          actual: res.error.actual!,
+        });
+      }
+
       setIsTraining(false);
     } catch (error) {
       console.error("코드 생성 실패: ", error);
@@ -66,6 +89,9 @@ const Step4 = () => {
       setIsGenerating(false);
     }
   };
+
+  const [errorSummary, setErrorSummary] = useState("");
+  const socketRef = useRef<WebSocket | null>(null);
 
   const handleTrainCode = () => {
     if (!generatedCode) {
@@ -78,9 +104,13 @@ const Step4 = () => {
 
     // WebSocket 연결 설정
     try {
-      const socket = new WebSocket(
+      // const socket = new WebSocket(
+      //   `wss://buildlab.shop/ws/train?token=${accessToken}`
+      // );
+      socketRef.current = new WebSocket(
         `wss://buildlab.shop/ws/train?token=${accessToken}`
       );
+      const socket = socketRef.current;
 
       // 연결 성공 이벤트 핸들러
       socket.onopen = () => {
@@ -108,6 +138,21 @@ const Step4 = () => {
       // 메시지 수신 이벤트 핸들러
       socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        console.log("onmessage 시작");
+        console.log(data.message);
+
+        // 학습 도중 에러
+        if (data.type === "error_analysis") {
+          console.log("summary: ", data.summary);
+          setErrorSummary(data.summary);
+          // 웹소켓 연결 종료
+          socketRef.current?.close(
+            1000,
+            "Training stopped due to error summary"
+          );
+          setIsTraining(false);
+          return;
+        }
 
         if (data.type === "log" && typeof data.message === "string") {
           console.log(data.message);
@@ -180,7 +225,7 @@ const Step4 = () => {
       </article>
 
       {/* 코드 생성 */}
-      <div className="mt-8 flex flex-row w-full gap-6 items-center justify-center">
+      <div className="mt-8 flex flex-col w-full gap-6 items-center justify-center">
         {isGenerating ? (
           <LoadingSpinner message="코드 생성 중입니다..." />
         ) : (
@@ -191,6 +236,19 @@ const Step4 = () => {
             코드 생성
           </div>
         )}
+
+        {errorInfo && (
+          <div className="mt-4 p-4 border border-red-500 rounded-lg bg-red-50 text-red-700 suit_16_R text-sm w-[70%]">
+            <p className="font-bold text-lg">⚠ 실행 순서 에러</p>
+            <p className="mt-1">사유: {errorInfo.reason}</p>
+            <p className="mt-1">예상 순서: {errorInfo.expected.join(" → ")}</p>
+            <p className="mt-1">실제 순서: {errorInfo.actual.join(" → ")}</p>
+            <br />
+            <p className="text-sm text-red-600 mt-2">
+              ** Step3로 돌아가 코드 구조 오류를 먼저 수정해주세요. **
+            </p>
+          </div>
+        )}
       </div>
 
       {/* 코드 훈련 */}
@@ -198,7 +256,7 @@ const Step4 = () => {
         <>
           <CodeViewer code={generatedCode} />
 
-          <div className="w-full flex items-center justify-center mt-8">
+          <div className="w-full flex flex-col items-center justify-center mt-8">
             {isTraining ? (
               <div className="w-full">
                 <EpochProgressBar
@@ -210,10 +268,29 @@ const Step4 = () => {
             ) : (
               <div
                 onClick={handleTrainCode}
-                className="px-6 py-2 inline-block text-2xl suit_16_B bg-main_orange text-black hover:bg-orange-400 cursor-pointer border-[8px] rounded-[20px]"
+                className={`px-6 py-2 inline-block text-2xl suit_16_B text-black border-[8px] rounded-[20px] ${
+                  errorInfo
+                    ? "bg-gray-400 "
+                    : "bg-main_orange hover:bg-orange-400 cursor-pointer"
+                }`}
               >
                 코드 훈련
               </div>
+            )}
+
+            {errorSummary && (
+              <>
+                <div className="mt-6 p-4 border border-red-500 rounded-lg bg-red-50 text-red-700 suit_16_R w-[80%] mx-auto">
+                  <p className="font-bold text-lg suit_16_M">⛔ 학습 중단됨</p>
+                  <pre className="whitespace-pre-wrap mt-2 suit_16_R">
+                    {errorSummary}
+                  </pre>
+                </div>
+                <ImgStep4
+                  width={100}
+                  className="flex flex-col justify-end mt-[-40px] ml-[980px]"
+                />
+              </>
             )}
           </div>
         </>

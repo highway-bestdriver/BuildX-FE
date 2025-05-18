@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Google } from "@assets/icons";
 import Button from "@common/Button";
 import InputField from "../_components/InputField";
 import Link from "next/link";
@@ -59,13 +58,13 @@ const LoginPage = () => {
       <span onClick={handleLogin}>
         <Button text="로그인하기" />
       </span>
-      <div className="geist_16_M py-4">or</div>
+      {/* <div className="geist_16_M py-4">or</div>
       <div className="flex justify-center items-center rounded-[20px] border-[8px] border-black py-2 px-6 cursor-pointer gap-3">
         <Google width={30} />
         <span className="text-main_black square_16_B text-xl">
           Continue with Google
         </span>
-      </div>
+      </div> */}
       <Link href="/signup" className="suit_16_M text-gray-500 underline pt-10">
         아직 계정이 없나요? 회원가입하러 가기
       </Link>

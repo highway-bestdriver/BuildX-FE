@@ -36,8 +36,20 @@ const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
 
   useEffect(() => {
     if (existing) {
-      const { ...rest } = existing;
-      setInputs(rest as Record<string, string>);
+      // const { ...rest } = existing;
+      // setInputs(rest as Record<string, string>);
+      const safeInputs: Record<string, string> = {};
+      for (const [key, val] of Object.entries(existing)) {
+        if (
+          typeof val === "string" &&
+          key !== "uuid" &&
+          key !== "x" &&
+          key !== "y"
+        ) {
+          safeInputs[key] = val;
+        }
+      }
+      setInputs(safeInputs);
     }
   }, [existing]);
 
@@ -85,6 +97,8 @@ const SettingModal = ({ label, blockUUID, onClose }: SettingModalProps) => {
       id,
       input,
       type: label,
+      x: existing?.x,
+      y: existing?.y,
       ...params,
     };
 

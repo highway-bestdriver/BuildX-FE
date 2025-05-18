@@ -4,10 +4,15 @@ export const modelApi = {
   // 코드 생성하기
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   generateCode: async (body: any) => {
-    const response = await privateApi.post<{ code: string }>(
-      `/code/generate`,
-      body
-    );
+    const response = await privateApi.post<{
+      code: string;
+      error?: {
+        valid: boolean;
+        reason?: string;
+        expected?: string[];
+        actual?: string[];
+      };
+    }>(`/code/generate`, body);
     return response;
   },
 
