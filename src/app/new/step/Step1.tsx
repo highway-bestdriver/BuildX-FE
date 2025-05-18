@@ -12,7 +12,6 @@ const Step1 = () => {
   const [selectedDataset, setSelectedDataset] = useState<string | null>(
     datasetName || null
   );
-  //const setDatasetName = useModelStore((state) => state.setDatasetName);
 
   const handleDatasetChange = (name: string) => {
     setSelectedDataset(name);

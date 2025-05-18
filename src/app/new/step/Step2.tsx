@@ -1,18 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SettingInput from "./_components/(block)/SettingInput";
 import { preprocessingData } from "@constants/preprocessingData";
 import { PreprocessingBlock, useModelStore } from "@store/useModelStore";
 import { validateType } from "src/hooks/useValidateType";
 
 const Step2 = () => {
+  const { preprocessing, setPreprocessing } = useModelStore();
   const [selected, setSelected] = useState<string[]>([]);
   const [inputs, setInputs] = useState<Record<string, Record<string, string>>>(
     {}
   );
   const [isCompleted, setIsCompleted] = useState(false);
-  const setPreprocessing = useModelStore((store) => store.setPreprocessing);
+
+  // 기존 내역으로 초기화
+  useEffect(() => {
+    if (preprocessing.length > 0) {
+      const newSelected: string[] = [];
+      const newInputs: Record<string, Record<string, string>> = {};
+
+      preprocessing.forEach((block) => {
+        newSelected.push(block.type);
+        const { type, ...rest } = block;
+        newInputs[block.type] = Object.fromEntries(
+          Object.entries(rest).map(([key, val]) => [key, String(val)])
+        );
+      });
+
+      setSelected(newSelected);
+      setInputs(newInputs);
+      setIsCompleted(true);
+    }
+  }, []);
 
   const toggleSelection = (method: string) => {
     setSelected((prev) =>
