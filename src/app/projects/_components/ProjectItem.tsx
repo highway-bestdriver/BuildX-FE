@@ -19,7 +19,8 @@ const ProjectItem = ({
         <Image
           src={thumbnail}
           alt={`${name} thumbnail`}
-          fill // 부모 영역 전체 채움
+          fill
+          sizes=""
           className="object-contain object-center transition-transform duration-300 ease-in-out group-hover:scale-105"
         />
       </div>

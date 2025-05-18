@@ -7,6 +7,7 @@ export { default as IcStar } from "./IcStar";
 export { default as IcTensorflow } from "./IcTensorflow";
 export { default as IcUpload } from "./IcUpload";
 export { default as ImgStep1 } from "./ImgStep1";
+export { default as ImgStep5 } from "./ImgStep5";
 export { default as IntroDescription } from "./IntroDescription";
 export { default as IntroImg } from "./IntroImg";
 export { default as IntroText } from "./IntroText";

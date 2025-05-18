@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { useResultStore } from "@store/useResultStore";
 import { useGenerateJson } from "src/hooks/useGenerateJson";
 import { modelApi } from "@api/client/model";
+import { ImgStep5 } from "@assets/icons";
 
 const Step5 = () => {
   const metrics = useResultStore((s) => s.trainingMetrics);
@@ -39,7 +40,7 @@ const Step5 = () => {
     if (metrics) {
       fetchFeedback();
     }
-  }, [metrics, getFeedbackRequestBody]);
+  }, []);
 
   if (!metrics || isLoading) {
     return (
@@ -129,9 +130,16 @@ const Step5 = () => {
 
       {/* GPT 분석 평가 */}
       <div className="bg-white shadow-md rounded-xl p-6">
-        <h3 className="text-xl suit_16_B text-main_black mb-4">
-          # 종합 분석 평가
-        </h3>
+        <div className="flex flex-row justify-between">
+          <h3 className="text-xl suit_16_B text-main_black mb-4">
+            # 종합 분석 평가
+          </h3>
+          <ImgStep5
+            width={130}
+            className="absolute top-[680px] left-[1250px]"
+          />
+        </div>
+
         <div className="text-gray-700 text-sm whitespace-pre-wrap leading-relaxed">
           {feedback}
         </div>
