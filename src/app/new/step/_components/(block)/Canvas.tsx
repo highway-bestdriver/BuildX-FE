@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { BLOCK_HEIGHT, BLOCK_WIDTH } from "@constants/blockData";
+import { BLOCK_HEIGHT, BLOCK_WIDTH, blockData } from "@constants/blockData";
 import { useModelStore } from "@store/useModelStore";
 import { useDrop } from "react-dnd";
 import CanvasBlock from "./CanvasBlock";
@@ -61,6 +61,8 @@ const Canvas = () => {
         id: "",
         type: item.label,
         input: "x",
+        x,
+        y,
       });
     },
   }));
@@ -95,7 +97,33 @@ const Canvas = () => {
     setBlocks((prev) =>
       prev.map((block) => (block.id === id ? { ...block, x, y } : block))
     );
+
+    const layer = layers.find((l) => l.uuid === id);
+    if (layer) {
+      updateLayer({ ...layer, x, y }); // 전역 상태에도 좌표 반영
+    }
   };
+
+  // 블록 상태 복원
+  useEffect(() => {
+    if (!layers || layers.length === 0) return;
+
+    const restoredBlocks = layers.map((layer) => {
+      const blockMeta = blockData.find((b) => b.label === layer.type);
+      const color = blockMeta?.color || "bg-gray-400"; // 기본색
+
+      return {
+        id: layer.uuid,
+        label: layer.type,
+        color,
+        x: layer.x ?? 100,
+        y: layer.y ?? 100,
+        isModalOpen: false,
+      };
+    });
+
+    setBlocks(restoredBlocks);
+  }, []);
 
   // 블록 간 화살표
   useEffect(() => {
