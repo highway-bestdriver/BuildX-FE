@@ -49,6 +49,8 @@ export interface ModelState {
 
   addConnection: (fromId: string, toId: string) => void;
   removeConnection: (toId: string) => void;
+
+  reset: () => void;
 }
 
 export const useModelStore = create<ModelState>()(
@@ -96,6 +98,20 @@ export const useModelStore = create<ModelState>()(
         set((state) => ({
           connections: state.connections.filter((c) => c.toId !== toId),
         })),
+
+      reset: () =>
+        set({
+          modelName: "",
+          datasetName: "",
+          preprocessing: [],
+          hyperparameters: {
+            epochs: "",
+            batch_size: "",
+            learning_rate: "",
+          },
+          layers: [],
+          connections: [],
+        }),
     }),
     {
       name: "model-storage",

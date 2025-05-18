@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@assets/icons";
 import { token } from "@api/token";
+import { useModelStore } from "@store/useModelStore";
 
 const MENU_ITEMS = [
   { href: "/tutorial", label: "TUTORIAL" },
@@ -16,6 +17,7 @@ const MENU_ITEMS = [
 export const Header = () => {
   const [isLogin, setIsLogin] = useState(false);
   const router = useRouter();
+  const resetModel = useModelStore((s) => s.reset);
 
   const pathname = usePathname();
 
@@ -31,6 +33,7 @@ export const Header = () => {
     if (isLogin) {
       token.remove();
       localStorage.clear();
+      resetModel();
       setIsLogin(false);
       router.push("/");
     } else {
