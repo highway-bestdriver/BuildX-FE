@@ -123,7 +123,7 @@ const Canvas = () => {
     });
 
     setBlocks(restoredBlocks);
-  }, []);
+  }, [layers]);
 
   // 블록 간 화살표
   useEffect(() => {

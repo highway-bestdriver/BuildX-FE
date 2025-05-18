@@ -2,7 +2,6 @@ import model_img1 from "@assets/images/model_img1.png";
 import model_img2 from "@assets/images/model_img2.png";
 import model_img3 from "@assets/images/model_img3.png";
 import model_img4 from "@assets/images/model_img4.png";
-import model_img5 from "@assets/images/model_img5.png";
 import model_img6 from "@assets/images/model_img6.png";
 import model_img7 from "@assets/images/model_img7.png";
 

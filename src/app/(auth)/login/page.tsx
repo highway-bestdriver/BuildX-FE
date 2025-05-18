@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Google } from "@assets/icons";
 import Button from "@common/Button";
 import InputField from "../_components/InputField";
 import Link from "next/link";

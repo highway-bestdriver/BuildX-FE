@@ -22,7 +22,7 @@ const Step2 = () => {
 
       preprocessing.forEach((block) => {
         newSelected.push(block.type);
-        const { type, ...rest } = block;
+        const { ...rest } = block;
         newInputs[block.type] = Object.fromEntries(
           Object.entries(rest).map(([key, val]) => [key, String(val)])
         );
@@ -32,7 +32,7 @@ const Step2 = () => {
       setInputs(newInputs);
       setIsCompleted(true);
     }
-  }, []);
+  }, [preprocessing]);
 
   const toggleSelection = (method: string) => {
     setSelected((prev) =>

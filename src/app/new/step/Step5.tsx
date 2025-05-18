@@ -40,7 +40,7 @@ const Step5 = () => {
     if (metrics) {
       fetchFeedback();
     }
-  }, []);
+  }, [getFeedbackRequestBody, metrics]);
 
   if (!metrics || isLoading) {
     return (
