@@ -7,9 +7,12 @@ import { IcBluePlus, IcTensorflow, ImgStep1 } from "@assets/icons";
 import { useModelStore } from "@store/useModelStore";
 
 const Step1 = () => {
+  const { datasetName, setDatasetName } = useModelStore();
   const [classes, setClasses] = useState<number[]>([1, 2]);
-  const [selectedDataset, setSelectedDataset] = useState<string | null>(null);
-  const setDatasetName = useModelStore((state) => state.setDatasetName);
+  const [selectedDataset, setSelectedDataset] = useState<string | null>(
+    datasetName || null
+  );
+  //const setDatasetName = useModelStore((state) => state.setDatasetName);
 
   const handleDatasetChange = (name: string) => {
     setSelectedDataset(name);

@@ -30,6 +30,7 @@ export const Header = () => {
   const handleClick = () => {
     if (isLogin) {
       token.remove();
+      localStorage.clear();
       setIsLogin(false);
       router.push("/");
     } else {
