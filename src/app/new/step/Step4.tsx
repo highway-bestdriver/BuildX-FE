@@ -12,6 +12,7 @@ import HyperparamForm from "./_components/(train)/HyperparamForm";
 import TrainingGraph from "./_components/(train)/TrainingGraph";
 import { useResultStore } from "@store/useResultStore";
 import EpochProgressBar from "./_components/(train)/EpochProgressBar";
+import { ImgStep4 } from "@assets/icons";
 
 const Step4 = () => {
   const { modelName, datasetName, layers, setHyperparameters } =
@@ -278,12 +279,18 @@ const Step4 = () => {
             )}
 
             {errorSummary && (
-              <div className="mt-6 p-4 border border-red-500 rounded-lg bg-red-50 text-red-700 suit_16_R w-[80%] mx-auto">
-                <p className="font-bold text-lg suit_16_M">⛔ 학습 중단됨</p>
-                <pre className="whitespace-pre-wrap mt-2 suit_16_R">
-                  {errorSummary}
-                </pre>
-              </div>
+              <>
+                <div className="mt-6 p-4 border border-red-500 rounded-lg bg-red-50 text-red-700 suit_16_R w-[80%] mx-auto">
+                  <p className="font-bold text-lg suit_16_M">⛔ 학습 중단됨</p>
+                  <pre className="whitespace-pre-wrap mt-2 suit_16_R">
+                    {errorSummary}
+                  </pre>
+                </div>
+                <ImgStep4
+                  width={100}
+                  className="flex flex-col justify-end mt-[-40px] ml-[980px]"
+                />
+              </>
             )}
           </div>
         </>
