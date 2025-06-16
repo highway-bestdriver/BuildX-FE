@@ -98,7 +98,7 @@ const ProjectsDetail = () => {
 
                 {/* 상세보기 */}
                 <td className="align-middle">
-                  <div className="inline-flex cursor-pointer bg-main_blue rounded-xl suit_16_M text-[14px] text-white px-4 py-2">
+                  <div className="inline-flex bg-main_blue rounded-xl suit_16_M text-[14px] text-white px-4 py-2">
                     상세보기
                   </div>
                 </td>
