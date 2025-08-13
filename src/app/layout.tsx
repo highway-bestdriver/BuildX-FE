@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { EuclidSquare, EuclidTriangle, GeistMono, suit, suite } from "./font";
 import { Header } from "../common/Header";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: "BuildX",
@@ -22,6 +23,7 @@ export default function RootLayout({
           <Header />
           <div className="flex flex-col w-full px-10 lg:max-w-[1280px] items-center pt-20 mx-auto">
             {children}
+            <SpeedInsights />
           </div>
         </div>
       </body>
